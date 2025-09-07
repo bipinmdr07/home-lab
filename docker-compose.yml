@@ -1,0 +1,31 @@
+networks:
+  homelab:
+    driver: bridge
+  database:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  adguardhome_work:
+  adguardhome_conf:
+
+services:
+  # DynamoDB
+  dynamodb:
+    extends:
+      file: ./services/dynamodb/dynamodb.yml
+      service: dynamodb
+    volumes:
+      - ${DYNAMO_DATA_PATH}:/home/dynamodblocal/data
+    networks:
+      - database
+  
+  # DynamoDB Dashboard
+  dynamodb-dashboard:
+    extends:
+      file: ./services/dynamodb-dashboard/dynamodb-dashboard.yml
+      service: dynamodb-dashboard
+    networks:
+      - database
+    depends_on:
+      - dynamodb

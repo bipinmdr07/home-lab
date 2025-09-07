@@ -1,0 +1,13 @@
+services:
+  dynamodb-dashboard:
+      container_name: dynamodb-dashboard
+      image: kritishdhaubanjar/dynamodb-dashboard:latest
+      environment:
+        AWS_REGION: us-west-2
+        AWS_ENDPOINT: http://dynamodb:8000
+        AWS_ACCESS_KEY_ID: fakeMyKeyId
+        AWS_SESSION_TOKEN: fakeSessionToken
+        AWS_SECRET_ACCESS_KEY: fakeSecretAccessKey
+      restart: always
+      ports:
+        - 4567:4567

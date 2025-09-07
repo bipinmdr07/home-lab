@@ -1,0 +1,6 @@
+.env
+/data/*
+!.gitkeep
+!/data/dynamodb/.gitkeep
+
+.DS_Store
