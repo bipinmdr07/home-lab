@@ -1,22 +1,38 @@
 networks:
   homelab:
+    name: homelab
     driver: bridge
   database:
+    name: database
     driver: bridge
 
-volumes:
-  postgres_data:
-  adguardhome_work:
-  adguardhome_conf:
-
 services:
+  # Traefik
+  traefik:
+    extends:
+      file: ./services/traefik/traefik.yml
+      service: traefik
+    networks:
+      - homelab
+
+  # Adguard
+  adguardhome:
+    extends:
+      file: ./services/adguardhome/adguardhome.yml
+      service: adguardhome
+    volumes:
+      - ${DEFAULT_DATA_PATH}/adguardhome/work:/opt/adguardhome/work
+      - ${DEFAULT_CONFIG_PATH}/adguardhome/conf:/opt/adguardhome/conf
+    networks:
+      - homelab
+
   # DynamoDB
   dynamodb:
     extends:
       file: ./services/dynamodb/dynamodb.yml
       service: dynamodb
     volumes:
-      - ${DYNAMO_DATA_PATH}:/home/dynamodblocal/data
+      - ${DEFAULT_DATA_PATH}/dynamodb/:/home/dynamodblocal/data
     networks:
       - database
   
@@ -26,6 +42,7 @@ services:
       file: ./services/dynamodb-dashboard/dynamodb-dashboard.yml
       service: dynamodb-dashboard
     networks:
+      - homelab
       - database
     depends_on:
       - dynamodb

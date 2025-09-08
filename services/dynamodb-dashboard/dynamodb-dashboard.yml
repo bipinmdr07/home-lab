@@ -11,3 +11,9 @@ services:
       restart: always
       ports:
         - 4567:4567
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.dynamodb-dashboard.rule=Host(`dynamodb-dashboard.${DOMAIN:-orangepi2.box}`)"
+        - "traefik.http.routers.dynamodb-dashboard.entrypoints=web"
+        - "traefik.http.services.dynamodb-dashboard.loadbalancer.server.port=4567"
+        - "traefik.docker.network=homelab"
