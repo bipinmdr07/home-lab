@@ -46,3 +46,17 @@ services:
       - database
     depends_on:
       - dynamodb
+
+  # Jellyfin
+  jellyfin:
+    extends:
+      file: ./services/jellyfin/jellyfin.yml
+      service: jellyfin
+    volumes:
+      - ${JELLYFIN_MEDIA_PATH}:/media
+      - ${DEFAULT_CONFIG_PATH}/jellyfin/config:/config
+      - ${DEFAULT_CACHE_PATH}/jellyfin/cache:/cache
+    # devices:
+    #   - /dev/dri:/dev/dri # For hardware acceleration (Intel/AMD)
+    networks:
+      - homelab
