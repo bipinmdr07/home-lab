@@ -7,6 +7,18 @@ networks:
     driver: bridge
 
 services:
+  # Twingate connector
+  twingate-connector:
+    extends:
+      file: ./services/twingate/twingate-connector.yml
+      service: twingate-connector
+    environment:
+      - TWINGATE_NETWORK=${TWINGATE_NETWORK}
+      - TWINGATE_ACCESS_TOKEN=${TWINGATE_ACCESS_TOKEN}
+      - TWINGATE_REFRESH_TOKEN=${TWINGATE_REFRESH_TOKEN}
+    networks:
+      - homelab
+
   # Traefik
   traefik:
     extends:

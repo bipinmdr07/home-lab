@@ -1,0 +1,5 @@
+services:
+  twingate-connector:
+    container_name: twingate-connector
+    image: twingate/connector:latest
+    restart: always
