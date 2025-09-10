@@ -77,3 +77,13 @@ services:
     volumes:
       - ${DEFAULT_CONFIG_PATH}/syncthing/config:/config
       - ${DEFAULT_DATA_PATH}/syncthing/:/data
+
+  # Portainer
+  portainer:
+    extends:
+      file: ./services/portainer/portainer.yml
+      service: portainer
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ${DEFAULT_DATA_PATH}/portainer/:/data
