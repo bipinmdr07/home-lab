@@ -62,7 +62,18 @@ services:
       - ${JELLYFIN_MEDIA_PATH}:/media
       - ${DEFAULT_CONFIG_PATH}/jellyfin/config:/config
       - ${DEFAULT_CACHE_PATH}/jellyfin/cache:/cache
+    environment:
+      - TZ=${TZ}
     # devices:
     #   - /dev/dri:/dev/dri # For hardware acceleration (Intel/AMD)
-    networks:
-      - homelab
+
+  # Syncthing
+  syncthing:
+    extends:
+      file: ./services/syncthing/syncthing.yml
+      service: syncthing
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ${DEFAULT_CONFIG_PATH}/syncthing/config:/config
+      - ${DEFAULT_DATA_PATH}/syncthing/:/data

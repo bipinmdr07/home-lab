@@ -4,8 +4,6 @@ services:
   jellyfin:
     image: jellyfin/jellyfin:latest
     container_name: jellyfin
-    environment:
-      - TZ=Asia/Kathmandu 
     restart: always
     ports:
       - "8096:8096"   # HTTP

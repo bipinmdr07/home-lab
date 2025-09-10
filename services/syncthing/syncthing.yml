@@ -1,0 +1,18 @@
+services:
+  syncthing:
+    image: lscr.io/linuxserver/syncthing:latest
+    container_name: syncthing
+    restart: always
+    environment:
+      - PUID=1000
+      - PGID=1000
+    ports:
+      - 8384:8384 # Web UI ports
+      - 22000:22000/tcp # Syncthing discovery and data transfer port
+      - 22000:22000/udp # Syncthing discovery port (UDP)
+      - 21027:21027/udp # Syncthing discovery port (UDP)
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.syncthing.rule=Host(`syncthing.${DOMAIN:-orangepi2.box}`)"
+      - "traefik.http.routers.syncthing.entrypoints=web"
+      - "traefix.http.services.syncthing.loadbalancer.server.port=8384"
