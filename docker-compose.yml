@@ -1,5 +1,5 @@
 networks:
-  homelab:
+  default:
     name: homelab
     driver: bridge
   database:
@@ -16,16 +16,12 @@ services:
       - TWINGATE_NETWORK=${TWINGATE_NETWORK}
       - TWINGATE_ACCESS_TOKEN=${TWINGATE_ACCESS_TOKEN}
       - TWINGATE_REFRESH_TOKEN=${TWINGATE_REFRESH_TOKEN}
-    networks:
-      - homelab
 
   # Traefik
   traefik:
     extends:
       file: ./services/traefik/traefik.yml
       service: traefik
-    networks:
-      - homelab
 
   # Adguard
   adguardhome:
@@ -35,8 +31,6 @@ services:
     volumes:
       - ${DEFAULT_DATA_PATH}/adguardhome/work:/opt/adguardhome/work
       - ${DEFAULT_CONFIG_PATH}/adguardhome/conf:/opt/adguardhome/conf
-    networks:
-      - homelab
 
   # DynamoDB
   dynamodb:
@@ -54,7 +48,7 @@ services:
       file: ./services/dynamodb-dashboard/dynamodb-dashboard.yml
       service: dynamodb-dashboard
     networks:
-      - homelab
+      - default
       - database
     depends_on:
       - dynamodb
