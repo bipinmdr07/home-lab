@@ -87,3 +87,16 @@ services:
       - TZ=${TZ}
     volumes:
       - ${DEFAULT_DATA_PATH}/portainer/:/data
+
+  # n8n
+  n8n:
+    extends:
+      file: ./services/n8n/n8n.yml
+      service: n8n
+    environment:
+      - GENERIC_TIMEZONE=${TZ}
+      - TZ=${TZ}
+    volumes:
+      - ${DEFAULT_DATA_PATH}/n8n/:/home/node/.n8n
+      - ${DEFAULT_DATA_PATH}/n8n_files/:/files
+

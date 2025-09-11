@@ -1,0 +1,23 @@
+services:
+  n8n:
+    build: .
+    container_name: n8n
+    restart: always
+    ports:
+      - 5678:5678
+    environment:
+      - N8N_SECURE_COOKIE=false
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      - N8N_PORT=5678
+      - N8N_RUNNERS_ENABLED=true
+      - NODE_ENV=production
+      - WEBHOOK_URL=http://n8n.${DOMAIN:-orangepi2.box}/
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      - TZ=${GENERIC_TIMEZONE}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.n8n.rule=Host(`n8n.${DOMAIN:-orangepi2.box}`)
+      - traefik.http.routers.n8n.entrypoints=web
+      - traefik.http.services.n8n.loadbalancer.server.port=5678
