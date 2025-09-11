@@ -5,3 +5,18 @@ services:
     restart: always
     ports:
       - 6379:6379
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
+    restart: always
+    ports:
+      - 5540:5540
+    depends_on:
+      - redis
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.redisinsight.rule=Host(`redis-insight.${DOMAIN:-orangepi2.box}`)
+      - traefik.http.routers.redisinsight.entrypoints=web
+      - traefik.http.services.redisinsight.loadbalancer.server.port=5540
+      - traefik.docker.network=homelab
