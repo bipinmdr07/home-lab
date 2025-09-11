@@ -100,3 +100,13 @@ services:
       - ${DEFAULT_DATA_PATH}/n8n/:/home/node/.n8n
       - ${DEFAULT_DATA_PATH}/n8n_files/:/files
 
+  # redis
+  redis:
+    extends:
+      file: ./services/redis/redis.yml
+      service: redis
+    volumes:
+      - ${DEFAULT_DATA_PATH}/redis/:/data
+    networks
+      - database
+
