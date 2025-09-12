@@ -6,3 +6,7 @@ services:
     ports:
       - "8000:8000"
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
+    volumes:
+      - ${DATA_PATH}/dynamodb/:/home/dynamodblocal/data
+    networks:
+      - database

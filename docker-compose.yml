@@ -12,10 +12,6 @@ services:
     extends:
       file: ./services/twingate/twingate-connector.yml
       service: twingate-connector
-    environment:
-      - TWINGATE_NETWORK=${TWINGATE_NETWORK}
-      - TWINGATE_ACCESS_TOKEN=${TWINGATE_ACCESS_TOKEN}
-      - TWINGATE_REFRESH_TOKEN=${TWINGATE_REFRESH_TOKEN}
 
   # Traefik
   traefik:
@@ -28,122 +24,63 @@ services:
     extends:
       file: ./services/adguardhome/adguardhome.yml
       service: adguardhome
-    volumes:
-      - ${DEFAULT_DATA_PATH}/adguardhome/work:/opt/adguardhome/work
-      - ${DEFAULT_CONFIG_PATH}/adguardhome/conf:/opt/adguardhome/conf
 
   # DynamoDB
   dynamodb:
     extends:
       file: ./services/dynamodb/dynamodb.yml
       service: dynamodb
-    volumes:
-      - ${DEFAULT_DATA_PATH}/dynamodb/:/home/dynamodblocal/data
-    networks:
-      - database
   
   # DynamoDB Dashboard
   dynamodb-dashboard:
     extends:
       file: ./services/dynamodb-dashboard/dynamodb-dashboard.yml
       service: dynamodb-dashboard
-    networks:
-      - default
-      - database
-    depends_on:
-      - dynamodb
 
   # Jellyfin
   jellyfin:
     extends:
       file: ./services/jellyfin/jellyfin.yml
       service: jellyfin
-    volumes:
-      - ${JELLYFIN_MEDIA_PATH}:/media
-      - ${DEFAULT_CONFIG_PATH}/jellyfin/config:/config
-      - ${DEFAULT_CACHE_PATH}/jellyfin/cache:/cache
-    environment:
-      - TZ=${TZ}
-    # devices:
-    #   - /dev/dri:/dev/dri # For hardware acceleration (Intel/AMD)
 
   # Syncthing
   syncthing:
     extends:
       file: ./services/syncthing/syncthing.yml
       service: syncthing
-    environment:
-      - TZ=${TZ}
-    volumes:
-      - ${DEFAULT_CONFIG_PATH}/syncthing/config:/config
-      - ${DEFAULT_DATA_PATH}/syncthing/:/data
 
   # Portainer
   portainer:
     extends:
       file: ./services/portainer/portainer.yml
       service: portainer
-    environment:
-      - TZ=${TZ}
-    volumes:
-      - ${DEFAULT_DATA_PATH}/portainer/:/data
 
   # n8n
   n8n:
     extends:
       file: ./services/n8n/n8n.yml
       service: n8n
-    environment:
-      - GENERIC_TIMEZONE=${TZ}
-      - TZ=${TZ}
-    volumes:
-      - ${DEFAULT_DATA_PATH}/n8n/:/home/node/.n8n
-      - ${DEFAULT_DATA_PATH}/n8n_files/:/files
 
   # redis
   redis:
     extends:
       file: ./services/redis/redis.yml
       service: redis
-    volumes:
-      - ${DEFAULT_DATA_PATH}/redis/:/data
-    networks:
-      - database
 
   # redisinsight
   redisinsight:
     extends:
       file: ./services/redis/redis.yml
       service: redisinsight
-      volumes:
-        - ${DEFAULT_DATA_PATH}/redisinsight/:/db
-      networks:
-        - default
-        - database
 
   # postgres
   postgres:
     extends:
       file: ./services/postgres/postgres.yml
       service: postgres
-    volumes:
-      - ${DEFAULT_DATA_PATH}/postgres/:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: postgres
-      PGPASSWORD: ${DB_PASSWORD}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_USER: ${DB_USER}
-    networks:
-      - database
 
   # pgadmin4
   pgadmin:
     extends:
       file: ./services/postgres/postgres.yml
       service: pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
-    networks:
-      - default
-      - database

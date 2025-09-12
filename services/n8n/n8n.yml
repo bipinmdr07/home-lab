@@ -12,10 +12,12 @@ services:
       - N8N_RUNNERS_ENABLED=true
       - NODE_ENV=production
       - WEBHOOK_URL=http://n8n.${DOMAIN:-orangepi2.box}/
-      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
-      - TZ=${GENERIC_TIMEZONE}
+      - GENERIC_TIMEZONE=${TZ}
+      - TZ=${TZ}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ${DATA_PATH}/n8n/:/home/node/.n8n
+      - ${DATA_PATH}/n8n_files/:/files
     labels:
       - traefik.enable=true
       - traefik.http.routers.n8n.rule=Host(`n8n.${DOMAIN:-orangepi2.box}`)

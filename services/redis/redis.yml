@@ -5,6 +5,10 @@ services:
     restart: always
     ports:
       - 6379:6379
+    volumes:
+      - ${DATA_PATH}/redis/:/data
+    networks:
+      - database
 
   redisinsight:
     image: redis/redisinsight:latest
@@ -14,6 +18,11 @@ services:
       - 5540:5540
     depends_on:
       - redis
+    volumes:
+      - ${DATA_PATH}/redisinsight/:/db
+    networks:
+      - default
+      - database
     labels:
       - traefik.enable=true
       - traefik.http.routers.redisinsight.rule=Host(`redis-insight.${DOMAIN:-orangepi2.box}`)

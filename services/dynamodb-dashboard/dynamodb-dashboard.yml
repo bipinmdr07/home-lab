@@ -1,19 +1,24 @@
 services:
   dynamodb-dashboard:
-      container_name: dynamodb-dashboard
-      image: kritishdhaubanjar/dynamodb-dashboard:latest
-      environment:
-        AWS_REGION: us-west-2
-        AWS_ENDPOINT: http://dynamodb:8000
-        AWS_ACCESS_KEY_ID: fakeMyKeyId
-        AWS_SESSION_TOKEN: fakeSessionToken
-        AWS_SECRET_ACCESS_KEY: fakeSecretAccessKey
-      restart: always
-      ports:
-        - 4567:4567
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.dynamodb-dashboard.rule=Host(`dynamodb-dashboard.${DOMAIN:-orangepi2.box}`)"
-        - "traefik.http.routers.dynamodb-dashboard.entrypoints=web"
-        - "traefik.http.services.dynamodb-dashboard.loadbalancer.server.port=4567"
-        - "traefik.docker.network=homelab"
+    container_name: dynamodb-dashboard
+    image: kritishdhaubanjar/dynamodb-dashboard:latest
+    environment:
+      AWS_REGION: us-west-2
+      AWS_ENDPOINT: http://dynamodb:8000
+      AWS_ACCESS_KEY_ID: fakeMyKeyId
+      AWS_SESSION_TOKEN: fakeSessionToken
+      AWS_SECRET_ACCESS_KEY: fakeSecretAccessKey
+    restart: always
+    ports:
+      - 4567:4567
+    networks:
+      - default
+      - database
+    depends_on:
+      - dynamodb
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dynamodb-dashboard.rule=Host(`dynamodb-dashboard.${DOMAIN:-orangepi2.box}`)"
+      - "traefik.http.routers.dynamodb-dashboard.entrypoints=web"
+      - "traefik.http.services.dynamodb-dashboard.loadbalancer.server.port=4567"
+      - "traefik.docker.network=homelab"
