@@ -121,3 +121,29 @@ services:
         - default
         - database
 
+  # postgres
+  postgres:
+    extends:
+      file: ./services/postgres/postgres.yml
+      service: postgres
+    volumes:
+      - ${DEFAULT_DATA_PATH}/postgres/:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: postgres
+      PGPASSWORD: ${DB_PASSWORD}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+    networks:
+      - database
+
+  # pgadmin4
+  pgadmin:
+    extends:
+      file: ./services/postgres/postgres.yml
+      service: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    networks:
+      - default
+      - database
