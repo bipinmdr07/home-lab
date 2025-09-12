@@ -84,3 +84,9 @@ services:
     extends:
       file: ./services/postgres/postgres.yml
       service: pgadmin
+
+  # MinIO
+  minio:
+    extends:
+      file: ./services/minio/minio.yml
+      service: minio
