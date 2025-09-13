@@ -8,6 +8,7 @@ services:
       - 5432:5432
     volumes:
       - ${DATA_PATH}/postgres/:/var/lib/postgresql/data
+      - ./custom-scripts/:/custom-scripts # Mount custom scripts directory
     environment:
       POSTGRES_DB: postgres
       PGPASSWORD: ${DB_PASSWORD}
@@ -15,6 +16,21 @@ services:
       POSTGRES_USER: ${DB_USER}
     networks:
       - database
+    command: >
+      sh -c "
+        docker-entrypoint.sh postgres &
+        PG_PID=$$! &&
+        until pg_isready -U ${DB_USER}; do sleep 2; done &&
+        echo 'PostgreSQL is ready. Running SQL scripts...' &&
+        for script in /custom-scripts/*.sql; do
+          if [ -f \"$$script\" ]; then
+            echo \"Executing $$script\" &&
+            psql -U ${DB_USER} -d postgres -f \"$$script\" || echo \"Script $$script completed (may have expected errors)\"
+          fi
+        done &&
+        echo 'All scripts executed.' &&
+        wait $$PG_PID
+      "
 
   pgadmin:
     image: dpage/pgadmin4:latest
