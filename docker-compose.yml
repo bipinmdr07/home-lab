@@ -96,3 +96,9 @@ services:
     extends:
       file: ./services/passbolt/passbolt.yml
       service: passbolt
+
+  # Nextcloud
+  nextcloud:
+    extends:
+      file: ./services/nextcloud/nextcloud.yml
+      service: nextcloud
