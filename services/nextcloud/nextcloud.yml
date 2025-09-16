@@ -11,6 +11,8 @@ services:
       - ${DATA_PATH}/nextcloud/custom_apps:/var/www/html/custom_apps
       - ${DATA_PATH}/nextcloud/themes:/var/www/html/themes
       - ${DATA_PATH}/nextcloud/data:/var/www/html/data
+      # Mount external storage if needed
+      # - /mnt/external-drive:/external:rw
     environment:
       - POSTGRES_HOST=postgres
       - POSTGRES_DB=nextcloud
