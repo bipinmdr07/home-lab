@@ -90,3 +90,9 @@ services:
     extends:
       file: ./services/minio/minio.yml
       service: minio
+
+  # Passbolt
+  passbolt:
+    extends:
+      file: ./services/passbolt/passbolt.yml
+      service: passbolt
