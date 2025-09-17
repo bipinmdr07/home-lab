@@ -1,0 +1,36 @@
+services:
+  immich-server:
+    container_name: immich_server
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    # extends:
+    #   file: hwaccel.transcoding.yml
+    #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
+    volumes:
+      # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
+      - ${DATA_PATH}/immich/upload:/data
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - TZ=${TZ}
+      - IMMICH_VERSION=release
+      - DB_HOSTNAME=postgres
+      - DB_DATABASE_NAME=immich
+      - DB_USERNAME=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_STORAGE_TYPE=SSD # Options are HDD or SSD
+    ports:
+      - '2283:2283'
+    depends_on:
+      - redis
+      - postgres
+    restart: always
+    healthcheck:
+      disable: false
+    networks:
+      - database
+      - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.immich.rule=Host(`immich.${DOMAIN:-orangepi2.box}`)"
+      - "traefik.http.routers.immich.entrypoints=web"
+      - "traefik.http.services.immich.loadbalancer.server.port=2283"
+      - "traefik.docker.network=homelab"

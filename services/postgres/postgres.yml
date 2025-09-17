@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:16-alpine
+    image: ghcr.io/immich-app/postgres:16-vectorchord0.3.0-pgvector0.8.0-pgvectors0.2.1
     container_name: postgres
     restart: always
     shm_size: 128mb
@@ -18,7 +18,7 @@ services:
       - database
     command: >
       sh -c "
-        docker-entrypoint.sh postgres &
+        docker-entrypoint.sh postgres -c shared_preload_libraries=vchord &
         PG_PID=$$! &&
         until pg_isready -U ${DB_USER}; do sleep 2; done &&
         echo 'PostgreSQL is ready. Running SQL scripts...' &&

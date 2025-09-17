@@ -102,3 +102,9 @@ services:
     extends:
       file: ./services/nextcloud/nextcloud.yml
       service: nextcloud
+
+  # Immich
+  immich-server:
+    extends:
+      file: ./services/immich/immich.yml
+      service: immich-server
