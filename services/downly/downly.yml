@@ -1,0 +1,22 @@
+services:
+  downly:
+    image: bipinmdr07/downly:latest
+    container_name: downly
+    restart: always
+    ports:
+      - 5050:5050
+    environment:
+      - NODE_ENV=production
+      - PORT=5050
+      - DB_LOCATION=${DB_LOCATION}
+      - DOWNLOAD_LOCATION=${DOWNLOAD_LOCATION}
+    volumes:
+      - ${DB_LOCATION}:/data/db
+      - ${DOWNLOAD_LOCATION}:/data/downloads
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.downly.rule=Host(`downly.${DOMAIN:-orangepi2.box}`)
+      - traefik.http.routers.downly.entrypoints=web
+      - traefik.http.services.downly.loadbalancer.server.port=5050
+      - traefik.docker.network=homelab
+    
