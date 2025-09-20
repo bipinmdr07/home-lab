@@ -1,0 +1,18 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ${CONFIG_PATH}/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: ${DOMAIN:-orangepi2.box}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.homepage.rule=Host(`${DOMAIN:-orangepi2.box}`)
+      - traefik.http.routers.homepage.entrypoints=web
+      - traefik.http.services.homepage.loadbalancer.server.port=3000
+      - traefik.docker.network=homelab

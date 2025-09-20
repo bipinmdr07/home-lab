@@ -108,3 +108,15 @@ services:
     extends:
       file: ./services/immich/immich.yml
       service: immich-server
+
+  # Downly
+  downly:
+    extends:
+      file: ./services/downly/downly.yml
+      service: downly
+
+  # Homepage
+  homepage:
+    extends:
+      file: ./services/homepage/homepage.yml
+      service: homepage
