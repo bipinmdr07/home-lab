@@ -18,7 +18,7 @@ services:
       - "5443:5443/udp" # DNSCrypt
     volumes:
     - ${DATA_PATH}/adguardhome/work:/opt/adguardhome/work
-    - ${CONFIG_PATH}/adguardhome/conf:/opt/adguardhome/conf
+    - ${CONFIG_PATH}/adguardhome:/opt/adguardhome/conf
     environment:
       - AGH_HTTP_BIND=0.0.0.0:8888
     labels:

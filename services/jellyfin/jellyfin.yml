@@ -7,8 +7,8 @@ services:
       - "8096:8096"   # HTTP
     volumes:
       - ${JELLYFIN_MEDIA_PATH}:/media
-      - ${CONFIG_PATH}/jellyfin/config:/config
-      - ${CACHE_PATH}/jellyfin/cache:/cache
+      - ${CONFIG_PATH}/jellyfin:/config
+      - ${CACHE_PATH}/jellyfin:/cache
     environment:
       - TZ=${TZ}
     # devices:

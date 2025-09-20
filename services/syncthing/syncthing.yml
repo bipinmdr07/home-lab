@@ -13,7 +13,7 @@ services:
       - 22000:22000/udp # Syncthing discovery port (UDP)
       - 21027:21027/udp # Syncthing discovery port (UDP)
     volumes:
-      - ${CONFIG_PATH}/syncthing/config:/config
+      - ${CONFIG_PATH}/syncthing:/config
       - ${DATA_PATH}/syncthing/:/data
     labels:
       - "traefik.enable=true"
