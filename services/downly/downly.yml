@@ -18,5 +18,7 @@ services:
       - traefik.http.routers.downly.rule=Host(`downly.${DOMAIN:-orangepi2.box}`)
       - traefik.http.routers.downly.entrypoints=web
       - traefik.http.services.downly.loadbalancer.server.port=5050
-      - traefik.docker.network=homelab
-    
+      - homepage.group=Media
+      - homepage.name=downly
+      - homepage.icon=mdi-cloud-arrow-down
+      - homepage.href=http://downly.${DOMAIN:-orangepi2.box}

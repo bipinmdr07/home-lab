@@ -18,3 +18,7 @@ services:
       - "traefik.http.routers.minio.rule=Host(`minio.${DOMAIN:-orangepi2.box}`)"
       - "traefik.http.routers.minio.entrypoints=web"
       - "traefik.http.services.minio.loadbalancer.server.port=9001"
+      - "homepage.group=Storage"
+      - "homepage.name=minio"
+      - "homepage.icon=si-minio"
+      - "homepage.href=http://minio.${DOMAIN:-orangepi2.box}"

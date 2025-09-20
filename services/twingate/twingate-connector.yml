@@ -7,3 +7,9 @@ services:
       - TWINGATE_NETWORK=${TWINGATE_NETWORK}
       - TWINGATE_ACCESS_TOKEN=${TWINGATE_ACCESS_TOKEN}
       - TWINGATE_REFRESH_TOKEN=${TWINGATE_REFRESH_TOKEN}
+    labels:
+      - "traefik.enable=false"
+      - "homepage.group=Network"
+      - "homepage.name=twingate"
+      - "homepage.icon=mdi-security-network"
+      - "homepage.href=https://${TWINGATE_NETWORK}.twingate.com"

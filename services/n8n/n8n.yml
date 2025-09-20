@@ -23,3 +23,7 @@ services:
       - traefik.http.routers.n8n.rule=Host(`n8n.${DOMAIN:-orangepi2.box}`)
       - traefik.http.routers.n8n.entrypoints=web
       - traefik.http.services.n8n.loadbalancer.server.port=5678
+      - homepage.group=Productivity
+      - homepage.name=n8n
+      - homepage.icon=si-n8n
+      - homepage.href=http://n8n.${DOMAIN:-orangepi2.box}

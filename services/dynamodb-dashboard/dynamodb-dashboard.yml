@@ -22,3 +22,6 @@ services:
       - "traefik.http.routers.dynamodb-dashboard.entrypoints=web"
       - "traefik.http.services.dynamodb-dashboard.loadbalancer.server.port=4567"
       - "traefik.docker.network=homelab"
+      - "homepage.name=dynamodb-dashboard"
+      - "homepage.group=Data"
+      - "homepage.href=http://dynamodb-dashboard.${DOMAIN:-orangepi2.box}"

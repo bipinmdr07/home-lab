@@ -38,4 +38,8 @@ services:
       - "traefik.http.routers.passbolt.entrypoints=web"
       - "traefik.http.services.passbolt.loadbalancer.server.port=8080"
       - "traefik.docker.network=homelab"
+      - homepage.group=Productivity
+      - homepage.name=passbolt
+      - homepage.icon=passbolt
+      - homepage.href=http://passbolt.${DOMAIN:-orangepi2.box}
     

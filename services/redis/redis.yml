@@ -9,6 +9,15 @@ services:
       - ${DATA_PATH}/redis/:/data
     networks:
       - database
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.redis.rule=Host(`redis.${DOMAIN:-orangepi2.box}`)
+      - traefik.http.routers.redis.entrypoints=web
+      - traefik.http.services.redis.loadbalancer.server.port=6379
+      - homepage.group=Database
+      - homepage.name=redis
+      - homepage.icon=si-redis
+      - homepage.href=http://redis.${DOMAIN:-orangepi2.box}
 
   redisinsight:
     image: redis/redisinsight:latest
@@ -29,3 +38,7 @@ services:
       - traefik.http.routers.redisinsight.entrypoints=web
       - traefik.http.services.redisinsight.loadbalancer.server.port=5540
       - traefik.docker.network=homelab
+      - homepage.group=Data
+      - homepage.name=redisinsight
+      - homepage.icon=si-redis
+      - homepage.href=http://redis-insight.${DOMAIN:-orangepi2.box}

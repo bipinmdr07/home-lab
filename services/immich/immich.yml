@@ -1,6 +1,6 @@
 services:
   immich-server:
-    container_name: immich_server
+    container_name: immich-server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     # extends:
     #   file: hwaccel.transcoding.yml
@@ -34,3 +34,11 @@ services:
       - "traefik.http.routers.immich.entrypoints=web"
       - "traefik.http.services.immich.loadbalancer.server.port=2283"
       - "traefik.docker.network=homelab"
+      - homepage.group=Media
+      - homepage.name=immich
+      - homepage.icon=si-immich
+      - homepage.href=http://immich.${DOMAIN:-orangepi2.box}
+      - homepage.widget.type=immich
+      - homepage.widget.url=http://immich.${DOMAIN:-orangepi2.box}
+      - homepage.widget.key=${IMMICH_API_KEY}
+      - homepage.widget.version=2
