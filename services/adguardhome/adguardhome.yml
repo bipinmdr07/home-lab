@@ -10,7 +10,8 @@ services:
       - "68:68/udp"     # DHCP server (optional)
       - "443:443/tcp"
       - "443:443/udp"
-      # - "3000:3000"     # Web interface (avoiding conflict with Postiz)
+      - "8888:8888"
+      - "3000:3000"     # Web interface
       - "853:853/tcp"   # DNS over TLS
       - "784:784/udp"   # DNS over QUIC
       - "8853:8853/udp" # DNS over QUIC (alternative port)
