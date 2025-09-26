@@ -6,6 +6,14 @@ networks:
     name: database
     driver: bridge
 
+volumes:
+  shared_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: $SHARED_DATA_PATH
+      o: bind
+
 services:
   # Twingate connector
   twingate-connector:

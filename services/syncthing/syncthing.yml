@@ -14,7 +14,7 @@ services:
       - 21027:21027/udp # Syncthing discovery port (UDP)
     volumes:
       - ${CONFIG_PATH}/syncthing:/config
-      - ${DATA_PATH}/syncthing/:/data
+      - ${DATA_PATH}/syncthing/:/var/syncthing
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.syncthing.rule=Host(`syncthing.${DOMAIN:-orangepi2.box}`)"

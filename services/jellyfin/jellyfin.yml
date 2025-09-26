@@ -6,11 +6,12 @@ services:
     ports:
       - "8096:8096"   # HTTP
     volumes:
-      - ${JELLYFIN_MEDIA_PATH}:/media
       - ${CONFIG_PATH}/jellyfin:/config
       - ${CACHE_PATH}/jellyfin:/cache
+      - shared_data:/mnt/shared
     environment:
       - TZ=${TZ}
+      - JELLYFIN_PublishedServerUrl=http://jellyfin.${DOMAIN:-orangepi2.box}
     # devices:
     #   - /dev/dri:/dev/dri # For hardware acceleration (Intel/AMD)
     labels:

@@ -18,6 +18,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${DATA_PATH}/n8n/:/home/node/.n8n
       - ${DATA_PATH}/n8n_files/:/files
+      - shared_data:/mnt/shared
     labels:
       - traefik.enable=true
       - traefik.http.routers.n8n.rule=Host(`n8n.${DOMAIN:-orangepi2.box}`)

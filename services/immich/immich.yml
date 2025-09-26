@@ -9,6 +9,7 @@ services:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
       - ${DATA_PATH}/immich/upload:/data
       - /etc/localtime:/etc/localtime:ro
+      - shared_data:/mnt/shared
     environment:
       - TZ=${TZ}
       - IMMICH_VERSION=release
@@ -16,7 +17,7 @@ services:
       - DB_DATABASE_NAME=immich
       - DB_USERNAME=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DB_STORAGE_TYPE=SSD # Options are HDD or SSD
+      - DB_STORAGE_TYPE=HDD # Options are HDD or SSD
     ports:
       - '2283:2283'
     depends_on:
