@@ -9,6 +9,8 @@ services:
     volumes:
       - ${MINIO_DATA_PATH}/:/data
     environment:
+      - PUID=1000
+      - PGID=1000
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
       - TZ=${TZ}
