@@ -2,14 +2,16 @@ services:
   immich-server:
     container_name: immich-server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
-    # extends:
-    #   file: hwaccel.transcoding.yml
+    extends:
+      file: hwaccel.transcoding.yml
+      service: vaapi
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     volumes:
-      # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
-      - ${DATA_PATH}/immich/upload:/data
+      - ${IMMICH_UPLOAD_PATH}/immich/upload:/data
       - /etc/localtime:/etc/localtime:ro
       - shared_data:/mnt/shared
+    devices:
+      - /dev/dri:/dev/dri # For hardware Acceleration
     environment:
       - TZ=${TZ}
       - IMMICH_VERSION=release
