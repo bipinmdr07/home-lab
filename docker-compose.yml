@@ -87,11 +87,11 @@ services:
       file: ./services/postgres/postgres.yml
       service: postgres
 
-  # pgadmin4
-  pgadmin:
+  # pgweb
+  pgweb:
     extends:
       file: ./services/postgres/postgres.yml
-      service: pgadmin
+      service: pgweb
 
   # MinIO
   minio:

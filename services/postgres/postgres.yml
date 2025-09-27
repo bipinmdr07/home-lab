@@ -42,27 +42,26 @@ services:
       - homepage.icon=si-postgresql
       - homepage.href=http://postgres.${DOMAIN:-orangepi2.box}
 
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: pgadmin
+  pgweb:
+    image: sosedoff/pgweb
+    container_name: pgweb
     restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
-    volumes:
-      - ${DATA_PATH}/pgadmin:/var/lib/pgadmin
+    ports:
+      - "8081:8081"
+    links:
+      - postgres:postgres
+    depends_on:
+      - postgres
     networks:
       - default
       - database
-    depends_on:
-      - postgres
     labels:
     - traefik.enable=true
-    - traefik.http.routers.pgadmin.rule=Host(`pgadmin.${DOMAIN:-orangepi2.box}`)
-    - traefik.http.routers.pgadmin.entrypoints=web
-    - traefik.http.services.pgladmin.loadbalancer.server.port=80
+    - traefik.http.routers.pgweb.rule=Host(`pgweb.${DOMAIN:-orangepi2.box}`)
+    - traefik.http.routers.pgweb.entrypoints=web
+    - traefik.http.services.pgweb.loadbalancer.server.port=8081
     - traefik.docker.network=homelab
     - homepage.group=Data
-    - homepage.name=pgadmin
+    - homepage.name=pgweb
     - homepage.icon=si-postgresql
-    - homepage.href=http://pgadmin.${DOMAIN:-orangepi2.box}
+    - homepage.href=http://pgweb.${DOMAIN:-orangepi2.box}
