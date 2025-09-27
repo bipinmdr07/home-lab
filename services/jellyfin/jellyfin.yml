@@ -12,8 +12,8 @@ services:
     environment:
       - TZ=${TZ}
       - JELLYFIN_PublishedServerUrl=http://jellyfin.${DOMAIN:-orangepi2.box}
-    # devices:
-    #   - /dev/dri:/dev/dri # For hardware acceleration (Intel/AMD)
+    devices:
+      - /dev/dri:/dev/dri # For hardware acceleration (Intel/AMD)
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.${DOMAIN:-orangepi2.box}`)"
