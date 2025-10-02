@@ -7,6 +7,8 @@ networks:
     driver: bridge
 
 volumes:
+  model-cache:
+
   shared_data:
     driver: local
     driver_opts:
@@ -116,6 +118,11 @@ services:
     extends:
       file: ./services/immich/immich.yml
       service: immich-server
+
+  immich-machine-learning:
+    extends:
+      file: ./services/immich/immich.yml
+      service: immich-machine-learning
 
   # Downly
   downly:
