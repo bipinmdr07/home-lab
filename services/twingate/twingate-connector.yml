@@ -3,6 +3,10 @@ services:
     container_name: twingate-connector
     image: twingate/connector:latest
     restart: always
+    dns:
+      - 172.20.0.2
+    dns_search:
+      - ${DOMAIN:-orangepi2.box}
     environment:
       - TWINGATE_NETWORK=${TWINGATE_NETWORK}
       - TWINGATE_ACCESS_TOKEN=${TWINGATE_ACCESS_TOKEN}
@@ -13,3 +17,5 @@ services:
       - "homepage.name=twingate"
       - "homepage.icon=mdi-security-network"
       - "homepage.href=https://${TWINGATE_NETWORK}.twingate.com"
+    depends_on:
+      - adguardhome

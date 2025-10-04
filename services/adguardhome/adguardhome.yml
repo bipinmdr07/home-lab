@@ -33,6 +33,9 @@ services:
       - "homepage.icon=adguard-home"
       - "homepage.href=http://adguard.${DOMAIN:-orangepi2.box}"
       - "homepage.widget.type=adguard"
-      - "homepage.widget.url=http://adguard.${DOMAIN:-orangepi2.box}"
+      - "homepage.widget.url=http://adguardhome:8888"
       - "homepage.widget.username=${ADGUARD_USERNAME}"
       - "homepage.widget.password=${ADGUARD_PASSWORD}"
+    networks:
+      default:
+        ipv4_address: 172.20.0.2
