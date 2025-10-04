@@ -20,6 +20,6 @@ services:
       - "homepage.icon=si-portainer"
       - "homepage.href=http://portainer.${DOMAIN:-orangepi2.box}"
       - "homepage.widget.type=portainer"
-      - "homepage.widget.url=http://portainer.${DOMAIN:-orangepi2.box}"
+      - "homepage.widget.url=http://portainer:9000"
       - "homepage.widget.key=${PORTAINER_API_KEY}"
       - "homepage.widget.env=3"

@@ -23,4 +23,4 @@ services:
       - "homepage.icon=traefik"
       - "homepage.href=http://traefik.${DOMAIN:-orangepi2.box}"
       - "homepage.widget.type=traefik"
-      - "homepage.widget.url=http://traefik.${DOMAIN:-orangepi2.box}"
+      - "homepage.widget.url=http://traefik:8080"

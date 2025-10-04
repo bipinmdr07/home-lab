@@ -39,6 +39,6 @@ services:
       - "homepage.icon=si-nextcloud"
       - "homepage.href=http://nextcloud.${DOMAIN:-orangepi2.box}"
       - "homepage.widget.type=nextcloud"
-      - "homepage.widget.url=http://nextcloud.${DOMAIN:-orangepi2.box}"
+      - "homepage.widget.url=http://nextcloud"
       - "homepage.widget.username=${NEXTCLOUD_ADMIN_USER}"
       - "homepage.widget.password=${NEXTCLOUD_ADMIN_PASSWORD}"

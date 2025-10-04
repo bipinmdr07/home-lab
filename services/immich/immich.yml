@@ -43,7 +43,7 @@ services:
       - homepage.icon=si-immich
       - homepage.href=http://immich.${DOMAIN:-orangepi2.box}
       - homepage.widget.type=immich
-      - homepage.widget.url=http://immich.${DOMAIN:-orangepi2.box}
+      - homepage.widget.url=http://immich-server:2283
       - homepage.widget.key=${IMMICH_API_KEY}
       - homepage.widget.version=2
 
@@ -65,8 +65,8 @@ services:
       - "3003:3003"
     volumes:
       - model-cache:/cache
-        # env_file:
-        # - .env
+      - ${IMMICH_UPLOAD_PATH}/:/data
+      - shared_data:/mnt/shared
     restart: always
     networks:
       - default
