@@ -8,5 +8,3 @@ RUN apk add --no-cache \
     bash \
     git \
     ffmpeg
-
-USER node

@@ -6,8 +6,6 @@ services:
     ports:
       - 5678:5678
     environment:
-      - PUID=1000
-      - PGID=1000
       - N8N_SECURE_COOKIE=false
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - N8N_PORT=5678
@@ -16,11 +14,21 @@ services:
       - WEBHOOK_URL=http://n8n.${DOMAIN:-orangepi2.box}/
       - GENERIC_TIMEZONE=${TZ}
       - TZ=${TZ}
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_USER=${DB_USER}
+      - DB_POSTGRESDB_PASSWORD=${DB_PASSWORD}
+      - DB_POSTGRESDB_SCHEMA=public
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${DATA_PATH}/n8n/:/home/node/.n8n
       - ${DATA_PATH}/n8n_files/:/files
       - shared_data:/mnt/shared
+    networks:
+      - default
+      - database
     labels:
       - traefik.enable=true
       - traefik.http.routers.n8n.rule=Host(`n8n.${DOMAIN:-orangepi2.box}`)
