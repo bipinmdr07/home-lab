@@ -26,16 +26,17 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.adguard.rule=Host(`adguard.${DOMAIN:-orangepi2.box}`)"
       - "traefik.http.routers.adguard.entrypoints=web"
-      - "traefik.http.services.adguard.loadbalancer.server.port=8888"
+      - "traefik.http.services.adguard.loadbalancer.server.url=http://192.168.69.69:8888"
       - "traefik.docker.network=homelab"
       - "homepage.group=Network"
       - "homepage.name=adguard"
       - "homepage.icon=adguard-home"
       - "homepage.href=http://adguard.${DOMAIN:-orangepi2.box}"
       - "homepage.widget.type=adguard"
-      - "homepage.widget.url=http://adguardhome:8888"
+      - "homepage.widget.url=http://192.168.69.69:8888"
       - "homepage.widget.username=${ADGUARD_USERNAME}"
       - "homepage.widget.password=${ADGUARD_PASSWORD}"
-    networks:
-      default:
-        ipv4_address: 172.20.0.2
+    network_mode: "host" # put for having static ip i.e. of host machine.
+#   networks:
+#     default:
+#       ipv4_address: 172.20.0.2
