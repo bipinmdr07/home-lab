@@ -9,7 +9,7 @@ services:
     environment:
       - NODE_ENV=production
       - DOCKER=true
-      - HOST_PROJECT_DIR=${SHARED_DATA_PATH}/cronmaster/project
+      - HOST_PROJECT_DIR=${DATA_PATH}/cronmaster
       - NEXT_PUBLIC_CLOCK_UPDATE_INTERVAL=30000
       - HOST_CRONTAB_USER=root
     volumes:
@@ -27,5 +27,5 @@ services:
       - traefik.http.services.cronmaster.loadbalancer.server.port=3000
       - homepage.group=Productivity
       - homepage.name=Cron Master
-      - homepage.icon=sh-cr-master
+      - homepage.icon=sh-cr-nmaster
       - homepage.href=http://cronmaster.${DOMAIN:-orangepi2.box}
