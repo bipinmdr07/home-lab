@@ -4,7 +4,7 @@ services:
     image: twingate/connector:latest
     restart: always
     dns:
-      - 172.20.0.2
+      - 192.168.69.69
     dns_search:
       - ${DOMAIN:-orangepi2.box}
     environment:
@@ -17,5 +17,6 @@ services:
       - "homepage.name=twingate"
       - "homepage.icon=mdi-security-network"
       - "homepage.href=https://${TWINGATE_NETWORK}.twingate.com"
+    network_mode: "host"
     depends_on:
       - adguardhome
