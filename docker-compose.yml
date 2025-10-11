@@ -139,3 +139,9 @@ services:
     extends:
       file: ./services/homepage/homepage.yml
       service: homepage
+
+  # Cron Master
+  cronmaster:
+    extends:
+      file: ./services/cronmaster/cronmaster.yml
+      service: cronmaster

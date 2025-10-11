@@ -1,0 +1,31 @@
+services:
+  cronmaster:
+    image: ghcr.io/fccview/cronmaster:latest
+    container_name: cronmaster
+    user: "root"
+    restart: always
+    ports:
+      - "4404:3000"
+    environment:
+      - NODE_ENV=production
+      - DOCKER=true
+      - HOST_PROJECT_DIR=${SHARED_DATA_PATH}/cronmaster/project
+      - NEXT_PUBLIC_CLOCK_UPDATE_INTERVAL=30000
+      - HOST_CRONTAB_USER=root
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DATA_PATH}/cronmaster/scripts:/app/scripts
+      - ${DATA_PATH}/cronmaster/data:/app/data
+      - ${DATA_PATH}/cronmaster/snippets:/app/snippets
+      - shared_data:/mnt/shared
+    pid: "host"
+    privileged: true
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.cronmaster.rule=Host(`cronmaster.${DOMAIN:-orangepi2.box}`)
+      - traefik.http.routers.cronmaster.entrypoints=web
+      - traefik.http.services.cronmaster.loadbalancer.server.port=3000
+      - homepage.group=Productivity
+      - homepage.name=Cron Master
+      - homepage.icon=sh-cr-master
+      - homepage.href=http://cronmaster.${DOMAIN:-orangepi2.box}
