@@ -42,3 +42,19 @@ services:
       - "homepage.widget.url=http://nextcloud"
       - "homepage.widget.username=${NEXTCLOUD_ADMIN_USER}"
       - "homepage.widget.password=${NEXTCLOUD_ADMIN_PASSWORD}"
+
+  nextcloud-cron:
+    image: nextcloud
+    container_name: nextcloud-cron
+    volumes:
+      - ${DATA_PATH}/nextcloud:/var/www/html
+      - ${CONFIG_PATH}/nextcloud:/var/www/html/config
+      - ${DATA_PATH}/nextcloud/custom_apps:/var/www/html/custom_apps
+      - ${DATA_PATH}/nextcloud/themes:/var/www/html/themes
+      - ${DATA_PATH}/nextcloud/data:/var/www/html/data
+      - shared_data:/mnt/shared
+    entrypoint: /cron.sh
+    depends_on:
+      - nextcloud
+    networks:
+      - database

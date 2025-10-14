@@ -117,6 +117,12 @@ services:
       file: ./services/nextcloud/nextcloud.yml
       service: nextcloud
 
+  # Nextcloud cron
+  nextcloud-cron:
+    extends:
+      file: ./services/nextcloud/nextcloud.yml
+      service: nextcloud-cron
+
   # Immich
   immich-server:
     extends:
