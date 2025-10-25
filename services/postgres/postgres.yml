@@ -16,6 +16,7 @@ services:
       POSTGRES_USER: ${DB_USER}
     networks:
       - database
+      - default
     command: >
       sh -c "
         docker-entrypoint.sh postgres -c shared_preload_libraries=vchord &
