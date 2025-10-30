@@ -23,9 +23,11 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.cronmaster.rule=Host(`cronmaster.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.cronmaster.entrypoints=web
+      - traefik.http.routers.cronmaster.entrypoints=websecure
+      - traefik.http.routers.cronmaster.tls=true
+      - traefik.http.routers.cronmaster.tls.certresolver=homelab
       - traefik.http.services.cronmaster.loadbalancer.server.port=3000
       - homepage.group=Productivity
       - homepage.name=Cron Master
       - homepage.icon=sh-cr-nmaster
-      - homepage.href=http://cronmaster.${DOMAIN:-orangepi2.box}
+      - homepage.href=https://cronmaster.${DOMAIN:-orangepi2.box}

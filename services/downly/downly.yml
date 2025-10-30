@@ -16,9 +16,11 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.downly.rule=Host(`downly.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.downly.entrypoints=web
+      - traefik.http.routers.downly.entrypoints=websecure
+      - traefik.http.routers.downly.tls=true
+      - traefik.http.routers.downly.tls.certresolver=homelab
       - traefik.http.services.downly.loadbalancer.server.port=5050
       - homepage.group=Media
       - homepage.name=downly
       - homepage.icon=mdi-cloud-arrow-down
-      - homepage.href=http://downly.${DOMAIN:-orangepi2.box}
+      - homepage.href=https://downly.${DOMAIN:-orangepi2.box}
