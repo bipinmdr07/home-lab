@@ -12,12 +12,14 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.redis.rule=Host(`redis.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.redis.entrypoints=web
+      - traefik.http.routers.redis.entrypoints=websecure
+      - traefik.http.routers.redis.tls=true
+      - traefik.http.routers.redis.tls.certresolver=homelab
       - traefik.http.services.redis.loadbalancer.server.port=6379
       - homepage.group=Database
       - homepage.name=redis
       - homepage.icon=si-redis
-      - homepage.href=http://redis.${DOMAIN:-orangepi2.box}
+      - homepage.href=https://redis.${DOMAIN:-orangepi2.box}
 
   redisinsight:
     image: redis/redisinsight:latest
@@ -35,10 +37,12 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.redisinsight.rule=Host(`redis-insight.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.redisinsight.entrypoints=web
+      - traefik.http.routers.redisinsight.entrypoints=websecure
+      - traefik.http.routers.redisinsight.tls=true
+      - traefik.http.routers.redisinsight.tls.certresolver=homelab
       - traefik.http.services.redisinsight.loadbalancer.server.port=5540
       - traefik.docker.network=homelab
       - homepage.group=Data
       - homepage.name=redisinsight
       - homepage.icon=si-redis
-      - homepage.href=http://redis-insight.${DOMAIN:-orangepi2.box}
+      - homepage.href=https://redis-insight.${DOMAIN:-orangepi2.box}
