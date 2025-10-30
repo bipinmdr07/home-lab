@@ -7,8 +7,8 @@ services:
           - adguard.${DOMAIN}
           - cronmaster.${DOMAIN}
           - downly.${DOMAIN}
-          - dynamodb.${DOMAIN}
           - dynamodb-dashboard.${DOMAIN}
+          - dynamodb.${DOMAIN}
           - immich.${DOMAIN}
           - jellyfin.${DOMAIN}
           - minio.${DOMAIN}
@@ -16,8 +16,9 @@ services:
           - nextcloud.${DOMAIN}
           - passbolt.${DOMAIN}
           - pgweb.${DOMAIN}
+          - portainer.${DOMAIN}
           - postgres.${DOMAIN}
-          - redis.${DOMAIN}
           - redis-insight.${DOMAIN}
+          - redis.${DOMAIN}
           - syncthing.${DOMAIN}
           - traefik.${DOMAIN}

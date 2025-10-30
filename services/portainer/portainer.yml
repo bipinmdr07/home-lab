@@ -11,15 +11,17 @@ services:
     environment:
       - TZ=${TZ}
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.portainer.rule=HOST(`portainer.${DOMAIN:-orangepi2.box}`)"
-      - "traefik.http.routers.portainer.entrypoints=web"
-      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-      - "homepage.group=Management"
-      - "homepage.name=portainer"
-      - "homepage.icon=si-portainer"
-      - "homepage.href=http://portainer.${DOMAIN:-orangepi2.box}"
-      - "homepage.widget.type=portainer"
-      - "homepage.widget.url=http://portainer:9000"
-      - "homepage.widget.key=${PORTAINER_API_KEY}"
-      - "homepage.widget.env=3"
+      - traefik.enable=true
+      - traefik.http.routers.portainer.rule=HOST(`portainer.${DOMAIN:-orangepi2.box}`)
+      - traefik.http.routers.portainer.entrypoints=websecure
+      - traefik.http.routers.portainer.tls=true
+      - traefik.http.routers.portainer.tls.certresolver=homelab
+      - traefik.http.services.portainer.loadbalancer.server.port=9000
+      - homepage.group=Management
+      - homepage.name=portainer
+      - homepage.icon=si-portainer
+      - homepage.href=https://portainer.${DOMAIN:-orangepi2.box}
+      - homepage.widget.type=portainer
+      - homepage.widget.url=http://portainer:9000
+      - homepage.widget.key=${PORTAINER_API_KEY}
+      - homepage.widget.env=3
