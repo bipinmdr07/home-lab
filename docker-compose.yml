@@ -27,6 +27,12 @@ services:
       file: ./services/twingate/twingate-connector.yml
       service: twingate-connector
 
+  # Step CA
+  stepca:
+    extends:
+      file: ./services/traefik/traefik.yml
+      service: stepca
+
   # Traefik
   traefik:
     extends:

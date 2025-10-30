@@ -1,0 +1,10 @@
+services:
+  traefik:
+    networks:
+      default:
+        aliases:
+          - ${DOMAIN}
+          - traefik.${DOMAIN}
+          - adguard.${DOMAIN}
+          - cronmaster.${DOMAIN}
+          - downly.${DOMAIN}

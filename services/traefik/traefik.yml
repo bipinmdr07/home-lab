@@ -1,26 +1,68 @@
 services:
+  stepca:
+    image: smallstep/step-ca:latest
+    container_name: stepca
+    user: root
+    restart: always
+    volumes:
+      - ${DATA_PATH}/stepca/step:/home/step
+    ports:
+      - "9000:9000"
+    environment:
+      - DOCKER_STEPCA_INIT_NAME=Homelab CA
+      - DOCKER_STEPCA_INIT_ACME=true
+      - DOCKER_STEPCA_INIT_DNS_NAMES=localhost,*.blade.box,stepca
+      - DOCKER_STEPCA_INIT_PROVISIONER=acme
+      - DOCKER_STEPCA_INIT_PASSWORD=${STEPCA_PASSWORD}
+
   traefik:
-    image: "traefik:v3.5"
+    image: "traefik:latest"
     container_name: "traefik"
     restart: always
+    dns:
+      - 192.168.69.69
+    depends_on:
+      - stepca
     command:
-      #- "--log.level=DEBUG"
       - "--api.insecure=true"
+      - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--entryPoints.web.address=:80"
+      - "--providers.file.filename=/dynamic-conf.yml"
+      - "--providers.file.watch=true"
+
+      # Endpoints
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+
+      # Local ACME resolver (points to Step CA)
+      - "--certificatesresolvers.homelab.acme.tlsChallenge=true"
+      - "--certificatesresolvers.homelab.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.homelab.acme.storage=/etc/acme/acme.json"
+      - "--certificatesresolvers.homelab.acme.caserver=https://stepca:9000/acme/acme/directory"
     ports:
       - "80:80"
+      - "443:443"
       - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - ${DATA_PATH}/stepca/step:/home/step
+      - ${DATA_PATH}/stepca/secrets:/home/step/secrets
+      - ${DATA_PATH}/traefik/acme:/etc/acme
+      - ${DATA_PATH}/stepca/step/certs/root_ca.crt:/usr/local/share/ca-certificates/my_root_ca.crt
+      - ${CONFIG_PATH}/traefik/traefik.yml:/dynamic-conf.yml:ro
+    environment:
+      LEGO_CA_CERTIFICATES: "/usr/local/share/ca-certificates/my_root_ca.crt"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN:-orangepi2.box}`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.tls.certresolver=homelab"
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
       - "homepage.group=Management"
       - "homepage.name=traefik"
       - "homepage.icon=traefik"
-      - "homepage.href=http://traefik.${DOMAIN:-orangepi2.box}"
+      - "homepage.href=https://traefik.${DOMAIN:-orangepi2.box}"
       - "homepage.widget.type=traefik"
       - "homepage.widget.url=http://traefik:8080"
