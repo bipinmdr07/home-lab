@@ -14,6 +14,7 @@ services:
           - minio.${DOMAIN}
           - n8n.${DOMAIN}
           - nextcloud.${DOMAIN}
+          - passbolt.${DOMAIN}
           - pgweb.${DOMAIN}
           - postgres.${DOMAIN}
           - redis.${DOMAIN}
