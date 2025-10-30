@@ -35,13 +35,15 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.postgres.rule=Host(`postgres.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.postgres.entrypoints=web
+      - traefik.http.routers.postgres.entrypoints=websecure
+      - traefik.http.routers.postgres.tls=true
+      - traefik.http.routers.postgres.tls.certresolver=homelab
       - traefik.http.services.postgres.loadbalancer.server.port=5432
       - traefik.docker.network=homelab
       - homepage.group=Database
       - homepage.name=postgres
       - homepage.icon=si-postgresql
-      - homepage.href=http://postgres.${DOMAIN:-orangepi2.box}
+      - homepage.href=https://postgres.${DOMAIN:-orangepi2.box}
 
   pgweb:
     image: sosedoff/pgweb
@@ -57,12 +59,14 @@ services:
       - default
       - database
     labels:
-    - traefik.enable=true
-    - traefik.http.routers.pgweb.rule=Host(`pgweb.${DOMAIN:-orangepi2.box}`)
-    - traefik.http.routers.pgweb.entrypoints=web
-    - traefik.http.services.pgweb.loadbalancer.server.port=8081
-    - traefik.docker.network=homelab
-    - homepage.group=Data
-    - homepage.name=pgweb
-    - homepage.icon=si-postgresql
-    - homepage.href=http://pgweb.${DOMAIN:-orangepi2.box}
+      - traefik.enable=true
+      - traefik.http.routers.pgweb.rule=Host(`pgweb.${DOMAIN:-orangepi2.box}`)
+      - traefik.http.routers.pgweb.entrypoints=websecure
+      - traefik.http.routers.pgweb.tls=true
+      - traefik.http.routers.pgweb.tls.certresolver=homelab
+      - traefik.http.services.pgweb.loadbalancer.server.port=8081
+      - traefik.docker.network=homelab
+      - homepage.group=Data
+      - homepage.name=pgweb
+      - homepage.icon=si-postgresql
+      - homepage.href=https://pgweb.${DOMAIN:-orangepi2.box}

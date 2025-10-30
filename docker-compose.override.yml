@@ -10,3 +10,5 @@ services:
           - dynamodb.${DOMAIN}
           - dynamodb-dashboard.${DOMAIN}
           - traefik.${DOMAIN}
+          - pgweb.${DOMAIN}
+          - postgres.${DOMAIN}
