@@ -33,15 +33,17 @@ services:
       - database
       - default
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.immich.rule=Host(`immich.${DOMAIN:-orangepi2.box}`)"
-      - "traefik.http.routers.immich.entrypoints=web"
-      - "traefik.http.services.immich.loadbalancer.server.port=2283"
-      - "traefik.docker.network=homelab"
+      - traefik.enable=true
+      - traefik.http.routers.immich.rule=Host(`immich.${DOMAIN:-orangepi2.box}`)
+      - traefik.http.routers.immich.entrypoints=websecure
+      - traefik.http.routers.immich.tls=true
+      - traefik.http.routers.immich.tls.certresolver=homelab
+      - traefik.http.services.immich.loadbalancer.server.port=2283
+      - traefik.docker.network=homelab
       - homepage.group=Media
       - homepage.name=immich
       - homepage.icon=si-immich
-      - homepage.href=http://immich.${DOMAIN:-orangepi2.box}
+      - homepage.href=https://immich.${DOMAIN:-orangepi2.box}
       - homepage.widget.type=immich
       - homepage.widget.url=http://immich-server:2283
       - homepage.widget.key=${IMMICH_API_KEY}

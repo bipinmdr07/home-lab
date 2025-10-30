@@ -9,6 +9,7 @@ services:
           - downly.${DOMAIN}
           - dynamodb.${DOMAIN}
           - dynamodb-dashboard.${DOMAIN}
+          - immich.${DOMAIN}
           - minio.${DOMAIN}
           - pgweb.${DOMAIN}
           - postgres.${DOMAIN}
