@@ -3,6 +3,7 @@ services:
     image: adguard/adguardhome:latest
     container_name: adguard
     restart: always
+    network_mode: "host" # for having static ip i.e. of host machine.
     ports:
       - "53:53/tcp"     # DNS over TCP
       - "53:53/udp"     # DNS over UDP
@@ -23,22 +24,18 @@ services:
     environment:
       - AGH_HTTP_BIND=0.0.0.0:8888
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.adguard.rule=Host(`adguard.${DOMAIN:-orangepi2.box}`)"
-      - "traefik.http.routers.adguard.entrypoints=websecure"
-      - "traefik.http.routers.adguard.tls=true"
-      - "traefik.http.routers.adguard.tls.certresolver=homelab"
-      - "traefik.http.services.adguard.loadbalancer.server.url=http://192.168.69.69:8888"
-      - "traefik.docker.network=homelab"
-      - "homepage.group=Network"
-      - "homepage.name=adguard"
-      - "homepage.icon=adguard-home"
-      - "homepage.href=https://adguard.${DOMAIN:-orangepi2.box}"
-      - "homepage.widget.type=adguard"
-      - "homepage.widget.url=http://192.168.69.69:8888"
-      - "homepage.widget.username=${ADGUARD_USERNAME}"
-      - "homepage.widget.password=${ADGUARD_PASSWORD}"
-    network_mode: "host" # put for having static ip i.e. of host machine.
-#   networks:
-#     default:
-#       ipv4_address: 172.20.0.2
+      - traefik.enable=true
+      - traefik.http.routers.adguard.rule=Host(`adguard.${DOMAIN:-orangepi2.box}`)
+      - traefik.http.routers.adguard.entrypoints=websecure
+      - traefik.http.routers.adguard.tls=true
+      - traefik.http.routers.adguard.tls.certresolver=homelab
+      - traefik.http.services.adguard.loadbalancer.server.url=http://192.168.69.69:8888
+      - traefik.docker.network=homelab
+      - homepage.group=Network
+      - homepage.name=adguard
+      - homepage.icon=adguard-home
+      - homepage.href=https://adguard.${DOMAIN:-orangepi2.box}
+      - homepage.widget.type=adguard
+      - homepage.widget.url=http://192.168.69.69:8888
+      - homepage.widget.username=${ADGUARD_USERNAME}
+      - homepage.widget.password=${ADGUARD_PASSWORD}
