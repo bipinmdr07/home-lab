@@ -4,7 +4,9 @@ services:
       default:
         aliases:
           - ${DOMAIN}
-          - traefik.${DOMAIN}
           - adguard.${DOMAIN}
           - cronmaster.${DOMAIN}
           - downly.${DOMAIN}
+          - dynamodb.${DOMAIN}
+          - dynamodb-dashboard.${DOMAIN}
+          - traefik.${DOMAIN}
