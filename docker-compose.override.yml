@@ -13,6 +13,7 @@ services:
           - jellyfin.${DOMAIN}
           - minio.${DOMAIN}
           - n8n.${DOMAIN}
+          - nextcloud.${DOMAIN}
           - pgweb.${DOMAIN}
           - postgres.${DOMAIN}
           - redis.${DOMAIN}
