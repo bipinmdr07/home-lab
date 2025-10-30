@@ -4,7 +4,7 @@ services:
     container_name: minio
     restart: always
     ports:
-      - 9000:9000 # Minio API port
+      - 9009:9000 # Minio API port
       - 9001:9001 # minio console port
     volumes:
       - ${MINIO_DATA_PATH}/:/data
@@ -16,11 +16,13 @@ services:
       - TZ=${TZ}
     command: server /data --console-address ":9001" # Start Minio server with console
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.minio.rule=Host(`minio.${DOMAIN:-orangepi2.box}`)"
-      - "traefik.http.routers.minio.entrypoints=web"
-      - "traefik.http.services.minio.loadbalancer.server.port=9001"
-      - "homepage.group=Storage"
-      - "homepage.name=minio"
-      - "homepage.icon=si-minio"
-      - "homepage.href=http://minio.${DOMAIN:-orangepi2.box}"
+      - traefik.enable=true
+      - traefik.http.routers.minio.rule=Host(`minio.${DOMAIN:-orangepi2.box}`)
+      - traefik.http.routers.minio.entrypoints=websecure
+      - traefik.http.routers.minio.tls=true
+      - traefik.http.routers.minio.tls.certresolver=homelab
+      - traefik.http.services.minio.loadbalancer.server.port=9001
+      - homepage.group=Storage
+      - homepage.name=minio
+      - homepage.icon=si-minio
+      - homepage.href=https://minio.${DOMAIN:-orangepi2.box}
