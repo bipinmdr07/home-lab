@@ -12,6 +12,7 @@ services:
           - immich.${DOMAIN}
           - jellyfin.${DOMAIN}
           - minio.${DOMAIN}
+          - n8n.${DOMAIN}
           - pgweb.${DOMAIN}
           - postgres.${DOMAIN}
           - redis.${DOMAIN}
