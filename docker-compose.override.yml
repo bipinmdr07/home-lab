@@ -16,4 +16,5 @@ services:
           - postgres.${DOMAIN}
           - redis.${DOMAIN}
           - redis-insight.${DOMAIN}
+          - syncthing.${DOMAIN}
           - traefik.${DOMAIN}
