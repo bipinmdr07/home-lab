@@ -4,7 +4,7 @@ services:
     container_name: passbolt
     restart: always
     environment:
-      - APP_FULL_BASE_URL=http://passbolt.${DOMAIN:-orangepi2.box}
+      - APP_FULL_BASE_URL=https://passbolt.${DOMAIN:-orangepi2.box}
       - DATASOURCES_DEFAULT_DRIVER=Cake\Database\Driver\Postgres
       - DATASOURCES_DEFAULT_ENCODING=utf8
       - DATASOURCES_DEFAULT_URL=postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/passbolt?schema=public
