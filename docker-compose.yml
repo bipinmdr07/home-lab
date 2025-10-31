@@ -157,3 +157,20 @@ services:
     extends:
       file: ./services/cronmaster/cronmaster.yml
       service: cronmaster
+
+  # Karakeep
+  karakeep:
+    extends:
+      file: ./services/karakeep/karakeep.yml
+      service: karakeep
+
+  chrome:
+    extends:
+      file: ./services/karakeep/karakeep.yml
+      service: chrome
+
+  meilisearch:
+    extends:
+      file: ./services/karakeep/karakeep.yml
+      service: meilisearch
+

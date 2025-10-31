@@ -11,6 +11,7 @@ services:
           - dynamodb.${DOMAIN}
           - immich.${DOMAIN}
           - jellyfin.${DOMAIN}
+          - karakeep.${DOMAIN}
           - minio.${DOMAIN}
           - n8n.${DOMAIN}
           - nextcloud.${DOMAIN}
