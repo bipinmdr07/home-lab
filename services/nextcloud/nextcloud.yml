@@ -22,6 +22,9 @@ services:
       - TZ=${TZ}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - OVERWRITEPROTOCOL=https
+      - OVERWRITEHOST=nextcloud.${DOMAIN:-orangepi2.box}
+      - OVERWRITECLIURL=https://nextcloud.${DOMAIN}
     depends_on:
       - postgres
       - redis

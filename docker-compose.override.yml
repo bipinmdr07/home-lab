@@ -9,6 +9,7 @@ services:
           - downly.${DOMAIN}
           - dynamodb-dashboard.${DOMAIN}
           - dynamodb.${DOMAIN}
+          - frigate.${DOMAIN}
           - immich.${DOMAIN}
           - jellyfin.${DOMAIN}
           - karakeep.${DOMAIN}

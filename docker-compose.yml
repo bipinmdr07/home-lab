@@ -174,3 +174,8 @@ services:
       file: ./services/karakeep/karakeep.yml
       service: meilisearch
 
+  frigate:
+    extends:
+      file: ./services/frigate/frigate.yml
+      service: frigate
+

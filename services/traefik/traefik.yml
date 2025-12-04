@@ -14,6 +14,17 @@ services:
       - DOCKER_STEPCA_INIT_DNS_NAMES=localhost,*.blade.box,stepca
       - DOCKER_STEPCA_INIT_PROVISIONER=acme
       - DOCKER_STEPCA_INIT_PASSWORD=${STEPCA_PASSWORD}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.stepca.rule=Host(`ca.${DOMAIN}`)
+      - traefik.http.routers.stepca.entrypoints=websecure
+      - traefik.http.routers.stepca.tls=true
+      - traefik.http.routers.stepca.tls.certresolver=homelab
+      - traefik.http.services.stepca.loadbalancer.server.port=9000
+      - homepage.group=Management
+      - homepage.name=stepca
+      - homepage.icon=sh-step-ca
+      - homepage.href=https://ca.${DOMAIN}/roots.pem
 
   traefik:
     image: "traefik:latest"
@@ -52,15 +63,15 @@ services:
     environment:
       LEGO_CA_CERTIFICATES: "/usr/local/share/ca-certificates/my_root_ca.crt"
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN:-orangepi2.box}`)"
-      - "traefik.http.routers.traefik.entrypoints=websecure"
-      - "traefik.http.routers.traefik.tls=true"
-      - "traefik.http.routers.traefik.tls.certresolver=homelab"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-      - "homepage.group=Management"
-      - "homepage.name=traefik"
-      - "homepage.icon=traefik"
-      - "homepage.href=https://traefik.${DOMAIN:-orangepi2.box}"
-      - "homepage.widget.type=traefik"
-      - "homepage.widget.url=http://traefik:8080"
+      - traefik.enable=true
+      - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN:-orangepi2.box}`)
+      - traefik.http.routers.traefik.entrypoints=websecure
+      - traefik.http.routers.traefik.tls=true
+      - traefik.http.routers.traefik.tls.certresolver=homelab
+      - traefik.http.services.traefik.loadbalancer.server.port=8080
+      - homepage.group=Management
+      - homepage.name=traefik
+      - homepage.icon=traefik
+      - homepage.href=https://traefik.${DOMAIN:-orangepi2.box}
+      - homepage.widget.type=traefik
+      - homepage.widget.url=http://traefik:8080
