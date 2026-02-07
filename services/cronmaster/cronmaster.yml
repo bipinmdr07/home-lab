@@ -3,6 +3,7 @@ services:
     image: ghcr.io/fccview/cronmaster:latest
     container_name: cronmaster
     user: "root"
+    init: true
     restart: always
     ports:
       - "4404:3000"

@@ -39,16 +39,25 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--providers.file.filename=/dynamic-conf.yml"
       - "--providers.file.watch=true"
+      - "--providers.docker.network=homelab"
 
       # Endpoints
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+
+      # Increase timeouts for uploads
+      - "--entrypoints.websecure.transport.respondingTimeouts.readTimeout=0"
+      - "--entrypoints.websecure.transport.respondingTimeouts.writeTimeout=0"
 
       # Local ACME resolver (points to Step CA)
       - "--certificatesresolvers.homelab.acme.tlsChallenge=true"
       - "--certificatesresolvers.homelab.acme.email=${ACME_EMAIL}"
       - "--certificatesresolvers.homelab.acme.storage=/etc/acme/acme.json"
       - "--certificatesresolvers.homelab.acme.caserver=https://stepca:9000/acme/acme/directory"
+
+      # Enable logging to debug
+      - "--log.level=INFO"
+      - "--accesslog=true"
     ports:
       - "80:80"
       - "443:443"
@@ -62,6 +71,15 @@ services:
       - ${CONFIG_PATH}/traefik/traefik.yml:/dynamic-conf.yml:ro
     environment:
       LEGO_CA_CERTIFICATES: "/usr/local/share/ca-certificates/my_root_ca.crt"
+
+    # Update CA certificates on container start
+#   entrypoint:
+#     - /bin/sh
+#     - -c
+#     - |
+#       apk add --no-cache ca-certificates
+#       update-ca-certificates
+#       exec traefik
     labels:
       - traefik.enable=true
       - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN:-orangepi2.box}`)

@@ -1,7 +1,9 @@
 services:
   n8n:
-    build: .
+    # build: .
+    image: docker.n8n.io/n8nio/n8n
     container_name: n8n
+    user: root
     restart: always
     ports:
       - 5678:5678
@@ -11,7 +13,10 @@ services:
       - N8N_PORT=5678
       - N8N_RUNNERS_ENABLED=true
       - NODE_ENV=production
-      - WEBHOOK_URL=http://n8n.${DOMAIN:-orangepi2.box}/
+      - WEBHOOK_URL=https://n8n.${DOMAIN:-orangepi2.box}
+      - N8N_PROXY_HOPS=1
+      - N8N_HOST=https://n8n.${DOMAIN:-orangepi2.box}
+      - N8N_ALLOWED_CORS_ORIGINS=https://n8n.${DOMAIN:-orangepi2.box}
       - GENERIC_TIMEZONE=${TZ}
       - TZ=${TZ}
       - DB_TYPE=postgresdb

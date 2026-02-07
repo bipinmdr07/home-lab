@@ -1,10 +1,16 @@
+# Use the Debian-based n8n image
 FROM docker.n8n.io/n8nio/n8n
 
 USER root
-RUN apk add --no-cache \
+
+# Install tools using apt-get
+RUN apk --update add \
     curl \
-    wget \
+    ffmpeg \
     jq \
     bash \
     git \
-    ffmpeg
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+USER node
