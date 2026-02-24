@@ -27,17 +27,20 @@ services:
       file: ./services/twingate/twingate-connector.yml
       service: twingate-connector
 
-  # Step CA
-  stepca:
+  # Caddy reverse proxy (fallback: services/traefik/traefik.yml)
+  caddy:
     extends:
-      file: ./services/traefik/traefik.yml
-      service: stepca
+      file: ./services/caddy/caddy.yml
+      service: caddy
 
-  # Traefik
-  traefik:
+  caddy-ca-download:
     extends:
-      file: ./services/traefik/traefik.yml
-      service: traefik
+      file: ./services/caddy/caddy.yml
+      service: caddy-ca-download
+    volumes:
+      - ${DATA_PATH}/caddy:/usr/share/nginx/html/caddy-data:ro
+      - ./services/caddy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./services/caddy/nginx-ca-default.conf:/etc/nginx/conf.d/default.conf:ro
 
   # Adguard
   adguardhome:

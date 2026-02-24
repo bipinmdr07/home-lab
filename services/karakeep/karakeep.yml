@@ -18,12 +18,9 @@ services:
       # If you want to mount a custom directory, change the volume mapping above instead.
       DATA_DIR: /data # DON'T CHANGE THIS
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.karakeep.rule=Host(`karakeep.${DOMAIN}`)
-      - traefik.http.routers.karakeep.entrypoints=websecure
-      - traefik.http.routers.karakeep.tls=true
-      - traefik.http.routers.karakeep.tls.certresolver=homelab
-      - traefik.http.services.karakeep.loadbalancer.server.port=3000
+      - caddy=karakeep.${DOMAIN}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 3000}}
       - homepage.group=Productivity
       - homepage.name=karakeep
       - homepage.icon=sh-karakeep

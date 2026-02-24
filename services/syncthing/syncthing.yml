@@ -16,12 +16,9 @@ services:
       - ${CONFIG_PATH}/syncthing:/config
       - ${SYNCTHING_DATA_PATH}/:/var/syncthing
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.syncthing.rule=Host(`syncthing.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.syncthing.entrypoints=websecure
-      - traefik.http.routers.syncthing.tls=true
-      - traefik.http.routers.syncthing.tls.certresolver=homelab
-      - traefik.http.services.syncthing.loadbalancer.server.port=8384
+      - caddy=syncthing.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 8384}}
       - homepage.group=Media
       - homepage.name=syncthing
       - homepage.icon=si-syncthing

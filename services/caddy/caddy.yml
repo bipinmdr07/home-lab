@@ -1,0 +1,32 @@
+services:
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy:latest
+    container_name: caddy
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${CONFIG_PATH}/caddy:/etc/caddy
+      - ${DATA_PATH}/caddy:/data
+    environment:
+      # Use Caddy's internal CA so HTTPS works for local domains (e.g. blade.box) without Let's Encrypt
+      # Browsers will show "not secure" unless you trust Caddy's root in your OS/browser
+      - CADDY_DOCKER_PROXY_DOCKER_NETWORK=homelab
+
+  # Serves Caddy's local CA root cert so anyone on the network can download and trust it (https://ca.${DOMAIN}/root.crt)
+  # Caddy stores PKI under data/caddy/ (extra "caddy" dir), so mount full data dir and nginx serves from caddy-data/caddy/pki/authorities/local/
+  caddy-ca-download:
+    image: nginx:alpine
+    container_name: caddy-ca-download
+    restart: always
+    networks:
+      - default
+    volumes:
+      - ${DATA_PATH}/caddy:/usr/share/nginx/html/caddy-data:ro
+      - ./nginx-ca-default.conf:/etc/nginx/conf.d/default.conf:ro
+    labels:
+      - caddy=ca.${DOMAIN}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 80}}

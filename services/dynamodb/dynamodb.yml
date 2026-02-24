@@ -11,12 +11,9 @@ services:
     networks:
       - database
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.dynamodb.rule=Host(`dynamodb.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.dynamodb.entrypoints=websecure
-      - traefik.http.routers.dynamodb.tls=true
-      - traefik.http.routers.dynamodb.tls.certresolver=homelab
-      - traefik.http.services.dynamodb.loadbalancer.server.port=8000
+      - caddy=dynamodb.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 8000}}
       - homepage.group=Database
       - homepage.name=dynamodb
       - homepage.icon=mdi-database

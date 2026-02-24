@@ -10,12 +10,9 @@ services:
     networks:
       - database
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.redis.rule=Host(`redis.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.redis.entrypoints=websecure
-      - traefik.http.routers.redis.tls=true
-      - traefik.http.routers.redis.tls.certresolver=homelab
-      - traefik.http.services.redis.loadbalancer.server.port=6379
+      - caddy=redis.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 6379}}
       - homepage.group=Database
       - homepage.name=redis
       - homepage.icon=si-redis
@@ -35,13 +32,9 @@ services:
       - default
       - database
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.redisinsight.rule=Host(`redis-insight.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.redisinsight.entrypoints=websecure
-      - traefik.http.routers.redisinsight.tls=true
-      - traefik.http.routers.redisinsight.tls.certresolver=homelab
-      - traefik.http.services.redisinsight.loadbalancer.server.port=5540
-      - traefik.docker.network=homelab
+      - caddy=redis-insight.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 5540}}
       - homepage.group=Data
       - homepage.name=redisinsight
       - homepage.icon=si-redis

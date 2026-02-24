@@ -33,13 +33,9 @@ services:
         wait $$PG_PID
       "
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.postgres.rule=Host(`postgres.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.postgres.entrypoints=websecure
-      - traefik.http.routers.postgres.tls=true
-      - traefik.http.routers.postgres.tls.certresolver=homelab
-      - traefik.http.services.postgres.loadbalancer.server.port=5432
-      - traefik.docker.network=homelab
+      - caddy=postgres.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 5432}}
       - homepage.group=Database
       - homepage.name=postgres
       - homepage.icon=si-postgresql
@@ -59,13 +55,9 @@ services:
       - default
       - database
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.pgweb.rule=Host(`pgweb.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.pgweb.entrypoints=websecure
-      - traefik.http.routers.pgweb.tls=true
-      - traefik.http.routers.pgweb.tls.certresolver=homelab
-      - traefik.http.services.pgweb.loadbalancer.server.port=8081
-      - traefik.docker.network=homelab
+      - caddy=pgweb.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 8081}}
       - homepage.group=Data
       - homepage.name=pgweb
       - homepage.icon=si-postgresql

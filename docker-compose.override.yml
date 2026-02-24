@@ -1,9 +1,10 @@
 services:
-  traefik:
+  caddy:
     networks:
       default:
         aliases:
           - ${DOMAIN}
+          - ca.${DOMAIN}
           - adguard.${DOMAIN}
           - cronmaster.${DOMAIN}
           - downly.${DOMAIN}

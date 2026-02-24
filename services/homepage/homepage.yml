@@ -11,10 +11,6 @@ services:
     environment:
       HOMEPAGE_ALLOWED_HOSTS: ${DOMAIN:-orangepi2.box}
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.homepage.rule=Host(`${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.homepage.entrypoints=websecure
-      - traefik.http.routers.homepage.tls=true
-      - traefik.http.routers.homepage.tls.certresolver=homelab
-      - traefik.http.services.homepage.loadbalancer.server.port=3000
-      - traefik.docker.network=homelab
+      - caddy=${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 3000}}

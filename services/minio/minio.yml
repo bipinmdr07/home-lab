@@ -16,12 +16,9 @@ services:
       - TZ=${TZ}
     command: server /data --console-address ":9001" # Start Minio server with console
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.minio.rule=Host(`minio.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.minio.entrypoints=websecure
-      - traefik.http.routers.minio.tls=true
-      - traefik.http.routers.minio.tls.certresolver=homelab
-      - traefik.http.services.minio.loadbalancer.server.port=9001
+      - caddy=minio.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 9001}}
       - homepage.group=Storage
       - homepage.name=minio
       - homepage.icon=si-minio

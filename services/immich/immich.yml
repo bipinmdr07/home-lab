@@ -33,13 +33,9 @@ services:
       - database
       - default
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.immich.rule=Host(`immich.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.immich.entrypoints=websecure
-      - traefik.http.routers.immich.tls=true
-      - traefik.http.routers.immich.tls.certresolver=homelab
-      - traefik.http.services.immich.loadbalancer.server.port=2283
-      - traefik.docker.network=homelab
+      - caddy=immich.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 2283}}
       - homepage.group=Media
       - homepage.name=immich
       - homepage.icon=si-immich

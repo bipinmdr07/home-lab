@@ -17,13 +17,9 @@ services:
     depends_on:
       - dynamodb
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.dynamodb-dashboard.rule=Host(`dynamodb-dashboard.${DOMAIN:-orangepi2.box}`)"
-      - "traefik.http.routers.dynamodb-dashboard.entrypoints=websecure"
-      - "traefik.http.routers.dynamodb-dashboard.tls=true"
-      - "traefik.http.routers.dynamodb-dashboard.tls.certresolver=homelab"
-      - "traefik.http.services.dynamodb-dashboard.loadbalancer.server.port=4567"
-      - "traefik.docker.network=homelab"
+      - "caddy=dynamodb-dashboard.${DOMAIN:-orangepi2.box}"
+      - "caddy.tls=internal"
+      - "caddy.reverse_proxy={{upstreams 4567}}"
       - "homepage.name=dynamodb-dashboard"
       - "homepage.icon=sh-dynamodb-dashboard"
       - "homepage.group=Data"

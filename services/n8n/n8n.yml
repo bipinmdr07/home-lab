@@ -9,6 +9,8 @@ services:
       - 5678:5678
     environment:
       - N8N_SECURE_COOKIE=false
+      # Allow file nodes to read/write under shared_data as well as the default n8n files dir (semicolon-separated)
+      - N8N_RESTRICT_FILE_ACCESS_TO=/root/.n8n-files;/mnt/shared
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - N8N_PORT=5678
       - N8N_RUNNERS_ENABLED=true
@@ -35,13 +37,9 @@ services:
       - default
       - database
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.n8n.rule=Host(`n8n.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.n8n.entrypoints=websecure
-      - traefik.http.routers.n8n.tls=true
-      - traefik.http.routers.n8n.tls.certresolver=homelab
-      - traefik.http.services.n8n.loadbalancer.server.port=5678
-      - traefik.docker.network=homelab
+      - caddy=n8n.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 5678}}
       - homepage.group=Productivity
       - homepage.name=n8n
       - homepage.icon=si-n8n

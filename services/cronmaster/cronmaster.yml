@@ -22,12 +22,9 @@ services:
     pid: "host"
     privileged: true
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.cronmaster.rule=Host(`cronmaster.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.cronmaster.entrypoints=websecure
-      - traefik.http.routers.cronmaster.tls=true
-      - traefik.http.routers.cronmaster.tls.certresolver=homelab
-      - traefik.http.services.cronmaster.loadbalancer.server.port=3000
+      - caddy=cronmaster.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 3000}}
       - homepage.group=Productivity
       - homepage.name=Cron Master
       - homepage.icon=sh-cr-nmaster

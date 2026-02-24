@@ -24,13 +24,10 @@ services:
     environment:
       - AGH_HTTP_BIND=0.0.0.0:8888
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.adguard.rule=Host(`adguard.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.adguard.entrypoints=websecure
-      - traefik.http.routers.adguard.tls=true
-      - traefik.http.routers.adguard.tls.certresolver=homelab
-      - traefik.http.services.adguard.loadbalancer.server.url=http://192.168.69.69:8888
-      - traefik.docker.network=homelab
+      # AdGuard runs with network_mode host, so proxy to host IP
+      - caddy=adguard.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy=http://192.168.69.69:8888
       - homepage.group=Network
       - homepage.name=adguard
       - homepage.icon=adguard-home

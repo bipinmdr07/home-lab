@@ -12,6 +12,8 @@ services:
       - ${DATA_PATH}/nextcloud/themes:/var/www/html/themes
       - ${DATA_PATH}/nextcloud/data:/var/www/html/data
       - shared_data:/mnt/shared
+      # Custom PHP limits so WebDAV uploads (e.g. iOS app) don’t get 0 bytes read
+      - ./php-uploads.ini:/usr/local/etc/php/conf.d/99-uploads.ini:ro
     environment:
       - POSTGRES_HOST=postgres
       - POSTGRES_DB=nextcloud
@@ -22,9 +24,12 @@ services:
       - TZ=${TZ}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      # Behind Caddy: same host/URL everywhere so Nextcloud doesn’t 400 on redirects
       - OVERWRITEPROTOCOL=https
       - OVERWRITEHOST=nextcloud.${DOMAIN:-orangepi2.box}
-      - OVERWRITECLIURL=https://nextcloud.${DOMAIN}
+      - OVERWRITECLIURL=https://nextcloud.${DOMAIN:-orangepi2.box}
+      # Trust Caddy (homelab subnet); avoids “reverse proxy header configuration incorrect” / 400
+      - TRUSTED_PROXIES=172.20.0.0/16
     depends_on:
       - postgres
       - redis
@@ -32,13 +37,11 @@ services:
       - database
       - default
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.nextcloud.rule=Host(`nextcloud.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.nextcloud.entrypoints=websecure
-      - traefik.http.routers.nextcloud.tls=true
-      - traefik.http.routers.nextcloud.tls.certresolver=homelab
-      - traefik.http.services.nextcloud.loadbalancer.server.port=80
-      - traefik.docker.network=homelab
+      - caddy=nextcloud.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      # Allow large request bodies and long timeouts so WebDAV PUT uploads (e.g. iOS) don’t end up as 0 bytes
+      - caddy.request_body.max_size=10GB
+      - caddy.reverse_proxy={{upstreams 80}}
       - homepage.group=Productivity
       - homepage.name=nextcloud
       - homepage.icon=si-nextcloud

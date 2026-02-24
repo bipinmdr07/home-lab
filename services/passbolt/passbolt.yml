@@ -33,13 +33,9 @@ services:
         /docker-entrypoint.sh
       "
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.passbolt.rule=Host(`passbolt.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.passbolt.entrypoints=websecure
-      - traefik.http.routers.passbolt.tls=true
-      - traefik.http.routers.passbolt.tls.certresolver=homelab
-      - traefik.http.services.passbolt.loadbalancer.server.port=8080
-      - traefik.docker.network=homelab
+      - caddy=passbolt.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 8080}}
       - homepage.group=Productivity
       - homepage.name=passbolt
       - homepage.icon=passbolt

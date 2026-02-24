@@ -14,12 +14,9 @@ services:
       - ${DB_LOCATION}:/data/db
       - ${DOWNLOAD_LOCATION}:/data/downloads
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.downly.rule=Host(`downly.${DOMAIN:-orangepi2.box}`)
-      - traefik.http.routers.downly.entrypoints=websecure
-      - traefik.http.routers.downly.tls=true
-      - traefik.http.routers.downly.tls.certresolver=homelab
-      - traefik.http.services.downly.loadbalancer.server.port=5050
+      - caddy=downly.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 5050}}
       - homepage.group=Media
       - homepage.name=downly
       - homepage.icon=mdi-cloud-arrow-down
