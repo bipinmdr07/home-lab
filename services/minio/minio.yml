@@ -1,20 +1,19 @@
 services:
   minio:
-    image: minio/minio:latest
+    image: quay.io/minio/aistor/minio:latest
     container_name: minio
     restart: always
     ports:
-      - 9009:9000 # Minio API port
-      - 9001:9001 # minio console port
+      - 9009:9000 # S3 API port
+      - 9001:9001 # Web console port
     volumes:
       - ${MINIO_DATA_PATH}/:/data
+      - ${MINIO_LICENSE_PATH}:/minio.license:ro
     environment:
-      - PUID=1000
-      - PGID=1000
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
       - TZ=${TZ}
-    command: server /data --console-address ":9001" # Start Minio server with console
+    command: server /data --console-address ":9001" --license /minio.license
     labels:
       - caddy=minio.${DOMAIN:-orangepi2.box}
       - caddy.tls=internal

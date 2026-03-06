@@ -9,6 +9,8 @@ services:
       - 5678:5678
     environment:
       - N8N_SECURE_COOKIE=false
+      # Stable encryption key so credentials survive container recreation
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
       # Allow file nodes to read/write under shared_data as well as the default n8n files dir (semicolon-separated)
       - N8N_RESTRICT_FILE_ACCESS_TO=/root/.n8n-files;/mnt/shared
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true

@@ -1,0 +1,59 @@
+services:
+  booklore:
+    image: booklore/booklore:latest
+    container_name: booklore
+    restart: always
+    depends_on:
+      booklore-mariadb:
+        condition: service_healthy
+    ports:
+      - "6060:6060"
+    volumes:
+      - ${DATA_PATH}/booklore:/app/data
+      - shared_data:/mnt/shared
+      - ${DATA_PATH}/booklore/bookdrop:/bookdrop
+    environment:
+      - USER_ID=${PUID:-1000}
+      - GROUP_ID=${PGID:-1000}
+      - TZ=${TZ}
+      - DATABASE_URL=jdbc:mariadb://booklore-mariadb:3306/booklore
+      - DATABASE_USERNAME=${BOOKLORE_DB_USER:-booklore}
+      - DATABASE_PASSWORD=${BOOKLORE_DB_PASSWORD}
+      - BOOKLORE_PORT=6060
+    labels:
+      - caddy=booklore.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 6060}}
+      - homepage.group=Media
+      - homepage.name=Booklore
+      - homepage.icon=mdi-bookshelf
+      - homepage.href=https://booklore.${DOMAIN:-orangepi2.box}
+      - homepage.description=Ebook Library Manager
+
+  booklore-mariadb:
+    image: lscr.io/linuxserver/mariadb:11.4.5
+    container_name: booklore-mariadb
+    restart: always
+    networks:
+      - database
+      - default
+    volumes:
+      - ${DATA_PATH}/booklore/mariadb:/config
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ}
+      - MYSQL_ROOT_PASSWORD=${BOOKLORE_MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=booklore
+      - MYSQL_USER=${BOOKLORE_DB_USER:-booklore}
+      - MYSQL_PASSWORD=${BOOKLORE_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    labels:
+      - homepage.group=Database
+      - homepage.name=Booklore MariaDB
+      - homepage.icon=si-mariadb
+      - homepage.description=Booklore Database

@@ -182,3 +182,13 @@ services:
       file: ./services/frigate/frigate.yml
       service: frigate
 
+  # Booklore - Ebook Library Manager
+  booklore:
+    extends:
+      file: ./services/booklore/booklore.yml
+      service: booklore
+
+  booklore-mariadb:
+    extends:
+      file: ./services/booklore/booklore.yml
+      service: booklore-mariadb

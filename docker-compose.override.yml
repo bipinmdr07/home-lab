@@ -25,3 +25,4 @@ services:
           - redis.${DOMAIN}
           - syncthing.${DOMAIN}
           - traefik.${DOMAIN}
+          - booklore.${DOMAIN}
