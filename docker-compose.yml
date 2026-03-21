@@ -182,13 +182,34 @@ services:
       file: ./services/frigate/frigate.yml
       service: frigate
 
-  # Booklore - Ebook Library Manager
-  booklore:
+  # Grimmory - Ebook library
+  grimmory:
     extends:
-      file: ./services/booklore/booklore.yml
-      service: booklore
+      file: ./services/grimmory/grimmory.yml
+      service: grimmory
 
-  booklore-mariadb:
+  grimmory-mariadb:
     extends:
-      file: ./services/booklore/booklore.yml
-      service: booklore-mariadb
+      file: ./services/grimmory/grimmory.yml
+      service: grimmory-mariadb
+
+  # Postiz – social media scheduling
+  postiz:
+    extends:
+      file: ./services/postiz/postiz.yml
+      service: postiz
+
+  postiz-temporal-elasticsearch:
+    extends:
+      file: ./services/postiz/postiz.yml
+      service: postiz-temporal-elasticsearch
+
+  postiz-temporal:
+    extends:
+      file: ./services/postiz/postiz.yml
+      service: postiz-temporal
+
+  postiz-temporal-ui:
+    extends:
+      file: ./services/postiz/postiz.yml
+      service: postiz-temporal-ui

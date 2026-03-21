@@ -1,0 +1,201 @@
+# Postiz – social media scheduling and management (see https://docs.postiz.com)
+# Uses shared postgres and redis; Temporal stack for workflows; MinIO for file storage.
+
+services:
+  postiz:
+    image: ghcr.io/gitroomhq/postiz-app:latest
+    container_name: postiz
+    restart: always
+    environment:
+      MAIN_URL: "https://postiz.${DOMAIN:-localhost}"
+      FRONTEND_URL: "https://postiz.${DOMAIN:-localhost}"
+      NEXT_PUBLIC_BACKEND_URL: "https://postiz.${DOMAIN:-localhost}/api"
+      JWT_SECRET: "${POSTIZ_JWT_SECRET}"
+      DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/postiz"
+      REDIS_URL: "redis://redis:6379"
+      BACKEND_INTERNAL_URL: "http://localhost:3000"
+      TEMPORAL_ADDRESS: "postiz-temporal:7233"
+      IS_GENERAL: "true"
+      STRIPE_ENABLED: "false"
+      DISABLE_REGISTRATION: "true"
+      RUN_CRON: "true"
+
+      # === Storage Settings
+      STORAGE_PROVIDER: 'local'
+      UPLOAD_DIRECTORY: '/uploads'
+      NEXT_PUBLIC_UPLOAD_DIRECTORY: '/uploads'
+
+      OPENAI_API_KEY: "${POSTIZ_OPENAI_API_KEY:-}"
+      API_LIMIT: "${POSTIZ_API_LIMIT:-30}"
+
+      # === Social Media API Settings
+      X_API_KEY: ''
+      X_API_SECRET: ''
+      LINKEDIN_CLIENT_ID: ''
+      LINKEDIN_CLIENT_SECRET: ''
+      REDDIT_CLIENT_ID: ''
+      REDDIT_CLIENT_SECRET: ''
+      GITHUB_CLIENT_ID: ''
+      GITHUB_CLIENT_SECRET: ''
+      BEEHIIVE_API_KEY: ''
+      BEEHIIVE_PUBLICATION_ID: ''
+      THREADS_APP_ID: ''
+      THREADS_APP_SECRET: ''
+      FACEBOOK_APP_ID: '${FACEBOOK_APP_ID}'
+      FACEBOOK_APP_SECRET: '${FACEBOOK_APP_SECRET}'
+      YOUTUBE_CLIENT_ID: ''
+      YOUTUBE_CLIENT_SECRET: ''
+      TIKTOK_CLIENT_ID: '${TIKTOK_CLIENT_ID}'
+      TIKTOK_CLIENT_SECRET: '${TIKTOK_CLIENT_SECRET}'
+      PINTEREST_CLIENT_ID: ''
+      PINTEREST_CLIENT_SECRET: ''
+      DRIBBBLE_CLIENT_ID: ''
+      DRIBBBLE_CLIENT_SECRET: ''
+      DISCORD_CLIENT_ID: ''
+      DISCORD_CLIENT_SECRET: ''
+      DISCORD_BOT_TOKEN_ID: ''
+      SLACK_ID: ''
+      SLACK_SECRET: ''
+      SLACK_SIGNING_SECRET: ''
+      MASTODON_URL: 'https://mastodon.social'
+      MASTODON_CLIENT_ID: ''
+      MASTODON_CLIENT_SECRET: ''
+
+      IS_SAAS: false
+
+      # === Payment / Stripe Settings
+      BILLING_ENABLED: 'false'
+      # FEE_AMOUNT: 0.00
+      # STRIPE_SECRET_KEY: ''
+      # STRIPE_PUBLISHABLE_KEY: ''
+      # STRIPE_SIGNING_KEY: ''
+      # STRIPE_SIGNING_KEY_CONNECT: ''
+
+      TZ: "${TZ}"
+    volumes:
+      - ${CONFIG_PATH}/postiz:/config
+      - ${DATA_PATH}/postiz/uploads:/uploads
+    ports:
+      - 4007:5000
+    networks:
+      - default
+      - database
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postiz-temporal:
+        condition: service_healthy
+    labels:
+      - caddy=postiz.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 5000}}
+      - homepage.group=Productivity
+      - homepage.name=Postiz
+      - homepage.icon=postiz
+      - homepage.href=https://postiz.${DOMAIN:-orangepi2.box}
+      - homepage.description=Social media scheduling
+
+  # For Application Monitoring / Debugging
+  spotlight:
+    image: ghcr.io/team-spotlight/spotlight:latest
+    container_name: spotlight
+    restart: always
+    ports:
+      - 8969:8969/tcp
+    networks:
+      - default
+    depends_on:
+      - postiz
+    labels:
+      - caddy=spotlight.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 8969}}
+      - homepage.group=Productivity
+      - homepage.name=Spotlight
+      - homepage.icon=si-spotlight
+      - homepage.href=https://spotlight.${DOMAIN:-orangepi2.box}
+
+  # Temporal stack (used by Postiz for workflow scheduling)
+  postiz-temporal-elasticsearch:
+    container_name: postiz-temporal-elasticsearch
+    image: elasticsearch:7.17.27
+    environment:
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=512mb
+      - cluster.routing.allocation.disk.watermark.high=256mb
+      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - xpack.security.enabled=false
+    networks:
+      - default
+    expose:
+      - 9200
+    volumes:
+      - ${DATA_PATH}/postiz/temporal-elasticsearch:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -f http://127.0.0.1:9200/_cluster/health?wait_for_status=yellow&timeout=5s || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 120s
+    labels:
+      - homepage.group=Productivity
+      - homepage.name=Elasticsearch (Postiz)
+      - homepage.icon=si-elasticsearch
+      - homepage.description=Temporal visibility store (Postiz)
+
+  postiz-temporal:
+    container_name: postiz-temporal
+    image: temporalio/auto-setup:1.28.1
+    ports:
+      - 7233:7233/tcp
+    depends_on:
+      postgres:
+        condition: service_healthy
+      postiz-temporal-elasticsearch:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "tctl --address localhost:7233 cluster health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 90s
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PWD=${DB_PASSWORD}
+      - POSTGRES_SEEDS=postgres
+      - ENABLE_ES=true
+      - ES_SEEDS=postiz-temporal-elasticsearch
+      - ES_VERSION=v7
+      - TEMPORAL_NAMESPACE=default
+      # Listen on all interfaces so Postiz (other containers) can connect to postiz-temporal:7233
+      - BIND_ON_IP=0.0.0.0
+    networks:
+      - default
+      - database
+
+  postiz-temporal-ui:
+    container_name: postiz-temporal-ui
+    image: temporalio/ui:2.34.0
+    environment:
+      - TEMPORAL_ADDRESS=postiz-temporal:7233
+      - TEMPORAL_CORS_ORIGINS=https://postiz.${DOMAIN:-localhost}
+    depends_on:
+      - postiz-temporal
+    networks:
+      - default
+    labels:
+      - caddy=temporal.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 8080}}
+      - homepage.group=Productivity
+      - homepage.name=Postiz Temporal
+      - homepage.icon=mdi-calendar-clock
+      - homepage.href=https://temporal.${DOMAIN:-orangepi2.box}
+      - homepage.description=Temporal workflows (Postiz)

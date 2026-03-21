@@ -12,7 +12,7 @@ services:
       - "443:443/tcp"
       - "443:443/udp"
       - "8888:8888"
-      - "3000:3000"     # Web interface
+      - "3002:3000"     # Web interface
       - "853:853/tcp"   # DNS over TLS
       - "784:784/udp"   # DNS over QUIC
       - "8853:8853/udp" # DNS over QUIC (alternative port)

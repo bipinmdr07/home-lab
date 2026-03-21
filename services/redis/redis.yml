@@ -9,6 +9,11 @@ services:
       - ${DATA_PATH}/redis/:/data
     networks:
       - database
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
     labels:
       - caddy=redis.${DOMAIN:-orangepi2.box}
       - caddy.tls=internal

@@ -25,4 +25,6 @@ services:
           - redis.${DOMAIN}
           - syncthing.${DOMAIN}
           - traefik.${DOMAIN}
-          - booklore.${DOMAIN}
+          - grimmory.${DOMAIN}
+          - postiz.${DOMAIN}
+          - temporal.${DOMAIN}
