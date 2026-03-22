@@ -155,6 +155,12 @@ services:
       file: ./services/homepage/homepage.yml
       service: homepage
 
+  # Draw.io (diagrams.net)
+  drawio:
+    extends:
+      file: ./services/drawio/drawio.yml
+      service: drawio
+
   # Cron Master
   cronmaster:
     extends:
