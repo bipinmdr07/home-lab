@@ -42,6 +42,12 @@ services:
       # Allow large request bodies and long timeouts so WebDAV PUT uploads (e.g. iOS) don’t end up as 0 bytes
       - caddy.request_body.max_size=10GB
       - caddy.reverse_proxy={{upstreams 80}}
+
+            # NEW: Redirect for ndrawio
+      - caddy_1=ndrawio.${DOMAIN:-orangepi2.box}
+      - caddy_1.tls=internal
+      - caddy_1.redir="https://nextcloud.${DOMAIN:-orangepi2.box}/apps/files/files?dir=/shared/drawio%20diagrams"
+
       - homepage.group=Productivity
       - homepage.name=nextcloud
       - homepage.icon=si-nextcloud

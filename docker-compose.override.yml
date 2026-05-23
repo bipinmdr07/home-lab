@@ -6,6 +6,7 @@ services:
           - ${DOMAIN}
           - ca.${DOMAIN}
           - adguard.${DOMAIN}
+          - bookstack.${DOMAIN}
           - cronmaster.${DOMAIN}
           - downly.${DOMAIN}
           - drawio.${DOMAIN}
@@ -16,6 +17,7 @@ services:
           - jellyfin.${DOMAIN}
           - karakeep.${DOMAIN}
           - minio.${DOMAIN}
+          - mariadb.${DOMAIN}
           - n8n.${DOMAIN}
           - nextcloud.${DOMAIN}
           - passbolt.${DOMAIN}
@@ -27,5 +29,3 @@ services:
           - syncthing.${DOMAIN}
           - traefik.${DOMAIN}
           - grimmory.${DOMAIN}
-          - postiz.${DOMAIN}
-          - temporal.${DOMAIN}

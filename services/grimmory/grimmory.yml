@@ -5,7 +5,7 @@ services:
     container_name: grimmory
     restart: always
     depends_on:
-      grimmory-mariadb:
+      mariadb:
         condition: service_healthy
     ports:
       - "6060:6060"
@@ -14,13 +14,18 @@ services:
       - shared_data:/mnt/shared
       - ${DATA_PATH}/grimmory/books:/books
       - ${DATA_PATH}/grimmory/bookdrop:/bookdrop
+    # Tomcat/Spring use /tmp under the container overlay. If the host filesystem
+    # that backs Docker (often /) is full, startup fails in a tight restart loop
+    # and burns CPU. tmpfs keeps temp on RAM instead of that full disk.
+    tmpfs:
+      - /tmp:rw,size=1024m
     environment:
       - USER_ID=${PUID:-1000}
       - GROUP_ID=${PGID:-1000}
       - TZ=${TZ}
-      - DATABASE_URL=jdbc:mariadb://grimmory-mariadb:3306/grimmory
-      - DATABASE_USERNAME=${GRIMMORY_DB_USER:-grimmory}
-      - DATABASE_PASSWORD=${GRIMMORY_DB_PASSWORD}
+      - DATABASE_URL=jdbc:mariadb://mariadb:3306/grimmory
+      - DATABASE_USERNAME=${DB_USER}
+      - DATABASE_PASSWORD=${DB_PASSWORD}
       - SWAGGER_ENABLED=false
     healthcheck:
       test: wget -q -O - http://localhost:6060/api/v1/healthcheck
@@ -37,31 +42,3 @@ services:
       - homepage.icon=mdi-bookshelf
       - homepage.href=https://grimmory.${DOMAIN:-orangepi2.box}
       - homepage.description=Ebook library
-
-  grimmory-mariadb:
-    image: lscr.io/linuxserver/mariadb:11.4.5
-    container_name: grimmory-mariadb
-    restart: always
-    networks:
-      - database
-      - default
-    volumes:
-      - ${DATA_PATH}/grimmory/mariadb:/config
-    environment:
-      - PUID=${PUID:-1000}
-      - PGID=${PGID:-1000}
-      - TZ=${TZ}
-      - MYSQL_ROOT_PASSWORD=${GRIMMORY_MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=grimmory
-      - MYSQL_USER=${GRIMMORY_DB_USER:-grimmory}
-      - MYSQL_PASSWORD=${GRIMMORY_DB_PASSWORD}
-    healthcheck:
-      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-    labels:
-      - homepage.group=Database
-      - homepage.name=Grimmory MariaDB
-      - homepage.icon=si-mariadb
-      - homepage.description=Grimmory database

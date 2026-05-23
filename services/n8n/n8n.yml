@@ -15,9 +15,9 @@ services:
       - N8N_RESTRICT_FILE_ACCESS_TO=/root/.n8n-files;/mnt/shared
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - N8N_PORT=5678
-      - N8N_RUNNERS_ENABLED=true
+      - N8N_REINSTALL_MISSING_PACKAGES=true
       - NODE_ENV=production
-      - WEBHOOK_URL=https://n8n.${DOMAIN:-orangepi2.box}
+      - WEBHOOK_URL=${N8N_WEBHOOK_URL:-https://n8n.${DOMAIN:-orangepi2.box}}
       - N8N_PROXY_HOPS=1
       - N8N_HOST=https://n8n.${DOMAIN:-orangepi2.box}
       - N8N_ALLOWED_CORS_ORIGINS=https://n8n.${DOMAIN:-orangepi2.box}
@@ -30,6 +30,12 @@ services:
       - DB_POSTGRESDB_USER=${DB_USER}
       - DB_POSTGRESDB_PASSWORD=${DB_PASSWORD}
       - DB_POSTGRESDB_SCHEMA=public
+      - N8N_EMAIL_MODE=smtp
+      - N8N_EMAIL_HOST=smtp.gmail.com
+      - N8N_EMAIL_PORT=587
+      - N8N_EMAIL_USER=${EMAIL_FROM}
+      - N8N_EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - N8N_EMAIL_SENDER=${EMAIL_FROM}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${DATA_PATH}/n8n/:/home/node/.n8n

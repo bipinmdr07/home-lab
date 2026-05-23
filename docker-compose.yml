@@ -108,11 +108,23 @@ services:
       file: ./services/postgres/postgres.yml
       service: pgweb
 
+  # MariaDB (shared: Grimmory, BookStack, …)
+  mariadb:
+    extends:
+      file: ./services/mariadb/mariadb.yml
+      service: mariadb
+
   # MinIO
   minio:
     extends:
       file: ./services/minio/minio.yml
       service: minio
+
+  # Cloudflare Tunnel (cloudflared)
+  cloudflared:
+    extends:
+      file: ./services/cloudflared/cloudflared.yml
+      service: cloudflared
 
   # Passbolt
   passbolt:
@@ -161,6 +173,12 @@ services:
       file: ./services/drawio/drawio.yml
       service: drawio
 
+  # BookStack (documentation wiki)
+  bookstack:
+    extends:
+      file: ./services/bookstack/bookstack.yml
+      service: bookstack
+
   # Cron Master
   cronmaster:
     extends:
@@ -193,29 +211,3 @@ services:
     extends:
       file: ./services/grimmory/grimmory.yml
       service: grimmory
-
-  grimmory-mariadb:
-    extends:
-      file: ./services/grimmory/grimmory.yml
-      service: grimmory-mariadb
-
-  # Postiz – social media scheduling
-  postiz:
-    extends:
-      file: ./services/postiz/postiz.yml
-      service: postiz
-
-  postiz-temporal-elasticsearch:
-    extends:
-      file: ./services/postiz/postiz.yml
-      service: postiz-temporal-elasticsearch
-
-  postiz-temporal:
-    extends:
-      file: ./services/postiz/postiz.yml
-      service: postiz-temporal
-
-  postiz-temporal-ui:
-    extends:
-      file: ./services/postiz/postiz.yml
-      service: postiz-temporal-ui

@@ -13,11 +13,14 @@ services:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
       - TZ=${TZ}
-    command: server /data --console-address ":9001" --license /minio.license
+    command: server /data --console-address ":9001" --address ":9000" --license /minio.license
     labels:
       - caddy=minio.${DOMAIN:-orangepi2.box}
       - caddy.tls=internal
       - caddy.reverse_proxy={{upstreams 9001}}
+      - caddy_1=aminio.${DOMAIN:-orangepi2.box}
+      - caddy_1.tls=internal
+      - caddy_1.reverse_proxy={{upstreams 9000}}
       - homepage.group=Storage
       - homepage.name=minio
       - homepage.icon=si-minio

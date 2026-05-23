@@ -1,0 +1,12 @@
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: always
+    # Outbound tunnel to Cloudflare; set hostnames and origins in Zero Trust → Networks → Tunnels.
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARED_TUNNEL_TOKEN}
+    labels:
+      - homepage.group=Network
+      - homepage.name=cloudflared
+      - homepage.icon=si-cloudflare
+      - homepage.href=https://one.dash.cloudflare.com/

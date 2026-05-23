@@ -1,0 +1,39 @@
+# Shared MariaDB for apps that need it (Grimmory, BookStack, …). First boot runs
+# docker-entrypoint-initdb.d scripts once; changing MYSQL_ROOT_PASSWORD later does not
+# re-run them. If apps fail with "Host '…' is not allowed" (1130) or "Unknown database 'grimmory'" (1049), run:
+#   docker compose exec mariadb /bin/bash /custom-scripts/grant-app-user.sh
+# Data layout differs from LinuxServer MariaDB; migrate with mysqldump if you had an old per-app instance.
+services:
+  mariadb:
+    image: mariadb:11.4
+    container_name: mariadb
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - ${DATA_PATH}/mariadb:/var/lib/mysql
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+      - ./custom-scripts:/custom-scripts:ro
+    environment:
+      - TZ=${TZ}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    networks:
+      - database
+      - default
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    labels:
+      - caddy=mariadb.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 3306}}
+      - homepage.group=Database
+      - homepage.name=MariaDB
+      - homepage.icon=si-mariadb
+      - homepage.href=https://mariadb.${DOMAIN:-orangepi2.box}
+      - homepage.description=Shared MariaDB (Grimmory, BookStack, …)

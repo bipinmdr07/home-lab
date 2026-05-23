@@ -1,0 +1,38 @@
+# BookStack wiki/docs; shared MariaDB `mariadb` with DB_USER/DB_PASSWORD (same as Postgres). DB name is bookstackapp — add it in mariadb/custom-scripts/create-databases.sql if you rename.
+# First login: admin@admin.com / password — change immediately.
+# APP_URL must match how you open the site (Caddy HTTPS) or links and uploads break.
+services:
+  bookstack:
+    image: lscr.io/linuxserver/bookstack:latest
+    container_name: bookstack
+    restart: always
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "6875:80"
+    volumes:
+      - ${DATA_PATH}/bookstack:/config
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ}
+      - APP_URL=https://bookstack.${DOMAIN:-orangepi2.box}
+      - APP_KEY=${BOOKSTACK_APP_KEY}
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_USERNAME=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=bookstackapp
+    networks:
+      - database
+      - default
+    labels:
+      - caddy=bookstack.${DOMAIN:-orangepi2.box}
+      - caddy.tls=internal
+      - caddy.reverse_proxy={{upstreams 80}}
+      - homepage.group=Productivity
+      - homepage.name=BookStack
+      - homepage.icon=si-bookstack
+      - homepage.href=https://bookstack.${DOMAIN:-orangepi2.box}
+      - homepage.description=Documentation wiki
