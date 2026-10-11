@@ -21,6 +21,12 @@ volumes:
       o: bind
 
 services:
+  # Tailscale VPN node
+  tailscale:
+    extends:
+      file: ./services/tailscale/tailscale.yml
+      service: tailscale
+
   # Twingate connector
   twingate-connector:
     extends:
@@ -47,6 +53,12 @@ services:
     extends:
       file: ./services/adguardhome/adguardhome.yml
       service: adguardhome
+
+  # Unbound recursive DNS resolver for AdGuard upstream
+  unbound:
+    extends:
+      file: ./services/unbound/unbound.yml
+      service: unbound
 
   # DynamoDB
   dynamodb:

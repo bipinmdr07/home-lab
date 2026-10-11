@@ -1,0 +1,27 @@
+services:
+  tailscale:
+    image: tailscale/tailscale:latest
+    container_name: tailscale
+    hostname: ${TS_HOSTNAME:-homelab}
+    restart: always
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_AUTH_ONCE=true
+      - TS_EXTRA_ARGS=${TS_EXTRA_ARGS:-}
+      # Match Docker's active nftables firewall backend on the host.
+      - TS_DEBUG_FIREWALL_MODE=auto
+    volumes:
+      - ${CONFIG_PATH}/tailscale:/var/lib/tailscale
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    labels:
+      - homepage.group=Network
+      - homepage.name=tailscale
+      - homepage.icon=si-tailscale
+      - homepage.href=https://login.tailscale.com/admin/machines

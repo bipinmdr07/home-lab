@@ -23,6 +23,8 @@ services:
     - ${CONFIG_PATH}/adguardhome:/opt/adguardhome/conf
     environment:
       - AGH_HTTP_BIND=0.0.0.0:8888
+    depends_on:
+      - unbound
     labels:
       # AdGuard runs with network_mode host, so proxy to host IP
       - caddy=adguard.${DOMAIN:-orangepi2.box}
